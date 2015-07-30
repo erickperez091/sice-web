@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+
+    <http pattern="/Home/Login" security="none"/>
+    <http auto-config="true">
+        <session-management invalid-session-url="/Home/Login">
+            <concurrency-control max-sessions="1" expired-url="/Home/Login" />
+        </session-management>
+        
+        <intercept-url pattern="/*" access="ROLE_ADMIN,ROLE_USER"/>
+        <form-login login-page="/Home/Login" default-target-url="/Home/Principal" authentication-failure-url="/Home/Login?error=true"
+                    always-use-default-target="true"/>
+        <logout logout-url="/Home/Logout" invalidate-session="true" delete-cookies="JSESSIONID"/>
+    </http>
+    
+    <!--authentication-failure-handler-ref="customAuthenticationFailureHandler"-->
+
+    <authentication-manager>
+        <authentication-provider ref="customAuthenticationProvider">
+        </authentication-provider>
+    </authentication-manager>
+    
+    <!--<beans:bean id="daoAuthenticationProvider" class="com.prueba.spring.authentication.CustomAuthenticationProvider">
+        <beans:property name="saltSource" ref="saltSource" />
+        <beans:property name="passwordEncoder" ref="passwordEncoder" />
+    </beans:bean>-->
+    
+    <beans:bean id="customAuthenticationProvider" class="com.prueba.spring.authentication.CustomAuthenticationProvider">
+        <beans:property name="saltSource" ref="saltSource" />
+        <beans:property name="passwordEncoder" ref="passwordEncoder" />
+    </beans:bean>
+    
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder">
+        <beans:constructor-arg index="0" value="MD5"></beans:constructor-arg>
+    </beans:bean>
+    
+    <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+        <beans:property name="userPropertyToUse" value="username"></beans:property>
+    </beans:bean>
+</beans:beans>
