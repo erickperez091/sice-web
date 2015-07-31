@@ -234,7 +234,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>SACE-web</finalName>
+        <finalName>SICE-web</finalName>
     </build>
 
     <repositories>
