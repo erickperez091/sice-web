@@ -9,11 +9,11 @@ import com.prueba.spring.bussiness.IBussiness;
 import com.prueba.spring.bussiness.impl.UsuarioBL;
 import com.prueba.spring.entidades.Usuario;
 import com.prueba.spring.entidades.util.Respuesta;
+import com.prueba.spring.entidades.util.UtilEnum;
 import com.prueba.spring.entidades.util.jqGridModel;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,16 +57,32 @@ public class UsuarioController {
 
     @RequestMapping(value = "/AgregarUsuario", method = RequestMethod.POST)
     public @ResponseBody
-    Respuesta agregarUsuario(@RequestBody Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
+    Respuesta agregarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
         //String nombre = request.getParameter("usuario");
         Respuesta respuesta = this.getUsuarioBL().guardar(usuario);
+        if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         return respuesta;
     }
-    
+
     @RequestMapping(value = "/ActualizarUsuario", method = RequestMethod.POST)
-    public @ResponseBody 
-    Respuesta actualizarUsuario(@RequestBody Usuario usuario){
+    public @ResponseBody
+    Respuesta actualizarUsuario(@RequestBody Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
         Respuesta respuesta = this.getUsuarioBL().actualizar(usuario);
+        if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return respuesta;
+    }
+
+    @RequestMapping(value = "/EliminarUsuario", method = RequestMethod.POST)
+    public @ResponseBody
+    Respuesta eliminarUsuario(@RequestBody Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
+        Respuesta respuesta = this.getUsuarioBL().eliminar(usuario);
+        if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
         return respuesta;
     }
 }

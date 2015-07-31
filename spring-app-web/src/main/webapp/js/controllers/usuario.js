@@ -98,11 +98,11 @@ $(document).ready(function () {
         $.ajax({
             url: contextPath + '/Usuario/AgregarUsuario',
             type: 'POST',
-            //contentType: 'application/x-www-form-urlencoded',
-            contentType: 'application/json',
+            contentType: 'application/x-www-form-urlencoded',
+            //contentType: 'application/json',
             dataType: 'JSON',
-            //data: $('#formUsuario').serialize(),
-            data: JSON.stringify($.serializeObject($('#formUsuario'))),
+            data: $('#formUsuario').serialize(),
+            //data: JSON.stringify($.serializeObject($('#formUsuario'))),
             success: function (data) {
                 if (!data.hasOwnProperty('error')) {
                     jqgrid.trigger("reloadGrid");
@@ -112,6 +112,7 @@ $(document).ready(function () {
                 }
             },
             error: function (error) {
+                alert(error);
             }
         });
     });
