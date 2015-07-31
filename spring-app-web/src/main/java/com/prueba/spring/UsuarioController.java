@@ -62,4 +62,11 @@ public class UsuarioController {
         Respuesta respuesta = this.getUsuarioBL().guardar(usuario);
         return respuesta;
     }
+    
+    @RequestMapping(value = "/ActualizarUsuario", method = RequestMethod.POST)
+    public @ResponseBody 
+    Respuesta actualizarUsuario(@RequestBody Usuario usuario){
+        Respuesta respuesta = this.getUsuarioBL().actualizar(usuario);
+        return respuesta;
+    }
 }
