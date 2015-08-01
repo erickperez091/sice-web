@@ -9,6 +9,7 @@ import com.prueba.spring.bussiness.IBussiness;
 import com.prueba.spring.bussiness.impl.UsuarioBL;
 import com.prueba.spring.entidades.Usuario;
 import com.prueba.spring.entidades.util.Respuesta;
+import com.prueba.spring.entidades.util.RespuestaGenerica;
 import com.prueba.spring.entidades.util.UtilEnum;
 import com.prueba.spring.entidades.util.jqGridModel;
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +69,7 @@ public class UsuarioController {
 
     @RequestMapping(value = "/ActualizarUsuario", method = RequestMethod.POST)
     public @ResponseBody
-    Respuesta actualizarUsuario(@RequestBody Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
+    Respuesta actualizarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
         Respuesta respuesta = this.getUsuarioBL().actualizar(usuario);
         if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -78,8 +79,18 @@ public class UsuarioController {
 
     @RequestMapping(value = "/EliminarUsuario", method = RequestMethod.POST)
     public @ResponseBody
-    Respuesta eliminarUsuario(@RequestBody Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
+    Respuesta eliminarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request, HttpServletResponse response) {
         Respuesta respuesta = this.getUsuarioBL().eliminar(usuario);
+        if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return respuesta;
+    }
+    
+    @RequestMapping(value = "/ObtenerUsuario", method = RequestMethod.GET)
+    public @ResponseBody RespuestaGenerica<Usuario> obtenerUsuario(int identificacion, HttpServletRequest request, HttpServletResponse response)
+    {
+        RespuestaGenerica<Usuario> respuesta = this.getUsuarioBL().obtener(identificacion);
         if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
