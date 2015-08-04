@@ -8,24 +8,34 @@
     http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 
+    <http pattern="/css/**" security="none"/>
     <http pattern="/Home/Login" security="none"/>
     <http auto-config="true">
         <session-management invalid-session-url="/Home/Login">
             <concurrency-control max-sessions="1" expired-url="/Home/Login" />
         </session-management>
         
-        <intercept-url pattern="/*" access="ROLE_ADMIN,ROLE_USER"/>
+        <intercept-url pattern="/*/*" access="ROLE_ADMIN,ROLE_USER"/>
         <form-login login-page="/Home/Login" default-target-url="/Home/Principal" authentication-failure-url="/Home/Login?error=true"
                     always-use-default-target="true"/>
         <logout logout-url="/Home/Logout" invalidate-session="true" delete-cookies="JSESSIONID"/>
     </http>
     
     <!--authentication-failure-handler-ref="customAuthenticationFailureHandler"-->
-
+    
     <authentication-manager>
-        <authentication-provider ref="customAuthenticationProvider">
+        <authentication-provider>
+            <user-service>
+                <user name="admin" password="admin" authorities="ROLE_ADMIN"></user>
+                <user name="prueba" password="prueba" authorities="ROLE_USER"></user>
+            </user-service>
         </authentication-provider>
     </authentication-manager>
+
+    <!--<authentication-manager>
+        <authentication-provider ref="customAuthenticationProvider">
+        </authentication-provider>
+    </authentication-manager>-->
     
     <!--<beans:bean id="daoAuthenticationProvider" class="com.prueba.spring.authentication.CustomAuthenticationProvider">
         <beans:property name="saltSource" ref="saltSource" />
