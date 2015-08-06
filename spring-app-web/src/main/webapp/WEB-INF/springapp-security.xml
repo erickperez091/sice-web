@@ -16,7 +16,8 @@
         </session-management>
         
         <intercept-url pattern="/*/*" access="ROLE_ADMIN,ROLE_USER"/>
-        <form-login login-page="/Home/Login" default-target-url="/Home/Principal" authentication-failure-url="/Home/Login?error=true"
+        <form-login login-page="/Home/Login" default-target-url="/Home/Principal" 
+                    authentication-failure-handler-ref="authenticationFailureHandler"
                     always-use-default-target="true"/>
         <logout logout-url="/Home/Logout" invalidate-session="true" delete-cookies="JSESSIONID"/>
     </http>
@@ -31,7 +32,21 @@
             </user-service>
         </authentication-provider>
     </authentication-manager>
-
+    
+    <beans:bean id="customAuthenticationFailureHandler" class="com.prueba.spring.authentication.CustomAuthenticationFailureHandler">
+        <beans:property name="redirectStrategy" ref="customRedirectStrategy"></beans:property>
+    </beans:bean>
+    
+    <beans:bean id="customRedirectStrategy" class="com.prueba.spring.authentication.CustomRedirectStrategy" />
+    
+    <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+        <beans:property name="exceptionMappings">
+            <beans:map>
+                <beans:entry key="org.springframework.security.authentication.BadCredentialsException" value="/Home/Login?error=1"></beans:entry>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    
     <!--<authentication-manager>
         <authentication-provider ref="customAuthenticationProvider">
         </authentication-provider>

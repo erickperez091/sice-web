@@ -69,11 +69,30 @@ $(document).ready(function () {
             });
         } else {
             var datos = jqgrid.jqGrid('getRowData', idRow, 'idUsuario');
-            $('#idUsuario').val(datos.idUsuario);
-            $('#usuario').val(datos.usuario);
-            $('#contrasenna').val(datos.contrasenna);
-            dialog.dialog('option', 'title', 'Editar Usuario');
-            dialog.dialog('open');
+            $.ajax({
+                url: contextPath + '/Usuario/ObtenerUsuario',
+                type: 'GET',
+                dataType: 'JSON',
+                data: {'identificacion': datos.idUsuario},
+                success: function (data) {
+                    console.log(data);
+                    $('#idUsuario').val(data.respuesta.idUsuario);
+                    $('#usuario').val(data.respuesta.usuario);
+                    $('#contrasenna').val(data.respuesta.contrasenna);
+                    dialog.dialog('option', 'title', 'Editar Usuario');
+                    dialog.dialog('open');
+                },
+                error: function () {
+                    $.howl({
+                        type: $(this).data('type'),
+                        title: 'Advertencia',
+                        sticky: $(this).data('sticky'),
+                        content: 'Ocurri&oacute; un error cargando el usuario.',
+                        lifetime: 3000,
+                        iconCls: $(this).data('icon')
+                    });
+                }
+            });
         }
     });
 

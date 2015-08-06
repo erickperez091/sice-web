@@ -49,7 +49,9 @@ public class UsuarioBL implements IBussiness<Usuario>{
 
     @Override
     public RespuestaGenerica<Usuario> obtener(int id) {
-        return this.getUsuarioDAO().obtener(id);
+        RespuestaGenerica<Usuario> respuesta = this.getUsuarioDAO().obtener(id);
+        respuesta.getRespuesta().setContrasenna("");
+        return respuesta;
     }
 
     @Override
