@@ -5,6 +5,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <tilesx:useAttribute name="current" />
@@ -20,10 +21,22 @@
 
     <ul class="nav navbar-nav pull-right">
         <li class="">
-            <a class="" data-toggle="dropdown" href="javascript:;">
-                <i class="fa fa-user"></i>
-                Rod Howard 
+            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+                <i class="fa fa-user"></i
+                <sec:authentication var="principal" property="principal" />
+                ${pageContext.request.userPrincipal.name}
+                ${principal.username}
+                <span class="caret"></span>
             </a>
+
+            <ul class="dropdown-menu" role="menu">
+                <li>
+                    <a href="<c:url value='/Home/Logout'/>">
+                        <i class="fa fa-sign-out"></i> 
+                        &nbsp;&nbsp;Logout
+                    </a>
+                </li>
+            </ul>
         </li>
     </ul>
 </nav> <!-- /#top-bar -->
@@ -40,12 +53,14 @@
                     Inicio
                 </a>				
             </li>
-            <li class="${current == 'mantenimientousuario' ? 'active' : ''}">				
-                <a href="<c:url value='/Usuario/Mantenimiento-Usuarios'/>">
-                    <i class="fa fa-dashboard"></i>
-                    Mantenimiento Usuarios
-                </a>				
-            </li>
+            <sec:authorize ifAnyGranted="ROLE_ADMIN">
+                <li class="${current == 'mantenimientousuario' ? 'active' : ''}">				
+                    <a href="<c:url value='/Usuario/Mantenimiento-Usuarios'/>">
+                        <i class="fa fa-dashboard"></i>
+                        Mantenimiento Usuarios
+                    </a>				
+                </li>
+            </sec:authorize>
         </ul>
 
     </nav> <!-- #sidebar -->

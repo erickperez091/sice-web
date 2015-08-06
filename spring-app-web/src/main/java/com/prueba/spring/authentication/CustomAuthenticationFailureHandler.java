@@ -27,10 +27,10 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        super.onAuthenticationFailure(request, response, exception);
-
-        String target = "";
-        String username = (String) exception.getAuthentication().getPrincipal();
+        //super.onAuthenticationFailure(request, response, exception);
+        
+        StringBuilder target = new StringBuilder();
+        this.saveException(request, exception);
         if (exception.getClass().isAssignableFrom(UsernameNotFoundException.class)) {
             System.out.println("Usuario no encontrado");
         } else if (exception.getClass().isAssignableFrom(DisabledException.class)) {
@@ -39,14 +39,14 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             System.out.println("Usuario Bloqueado");
         } else if (exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
             System.out.println("Contraseña Incorrecta");
-            request.setAttribute("username", username);
-            this.setDefaultFailureUrl("/Home/BadCredentials");
-            target = "/Home/BadCredentials";
-            this.saveException(request, exception);
-            request.getRequestDispatcher(target).forward(request, response);
+            target.append("/Home/BadCredentials");
+            
+            //
+            //request.getRequestDispatcher(target).forward(request, response);
         } else if (exception.getClass().isAssignableFrom(CredentialsExpiredException.class)) {
             System.out.println("Contraseña expirada");
         }
-        this.getRedirectStrategy().sendRedirect(request, response, target);
+        this.setDefaultFailureUrl(target.toString());
+        this.getRedirectStrategy().sendRedirect(request, response, target.toString());
     }
 }

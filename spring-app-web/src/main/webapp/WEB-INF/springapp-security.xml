@@ -10,14 +10,16 @@
 
     <http pattern="/css/**" security="none"/>
     <http pattern="/Home/Login" security="none"/>
+    <http pattern="/Home/BadCredentials" security="none"/>
     <http auto-config="true">
         <session-management invalid-session-url="/Home/Login">
             <concurrency-control max-sessions="1" expired-url="/Home/Login" />
         </session-management>
-        
+        <access-denied-handler error-page="/Home/Forbidden" />
+        <intercept-url pattern="/Usuario/*" access="ROLE_ADMIN" />
         <intercept-url pattern="/*/*" access="ROLE_ADMIN,ROLE_USER"/>
         <form-login login-page="/Home/Login" default-target-url="/Home/Principal" 
-                    authentication-failure-handler-ref="authenticationFailureHandler"
+                    authentication-failure-handler-ref="customAuthenticationFailureHandler"
                     always-use-default-target="true"/>
         <logout logout-url="/Home/Logout" invalidate-session="true" delete-cookies="JSESSIONID"/>
     </http>
@@ -42,7 +44,7 @@
     <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
         <beans:property name="exceptionMappings">
             <beans:map>
-                <beans:entry key="org.springframework.security.authentication.BadCredentialsException" value="/Home/Login?error=1"></beans:entry>
+                <beans:entry key="org.springframework.security.authentication.BadCredentialsException" value="/Home/BadCredentials"></beans:entry>
             </beans:map>
         </beans:property>
     </beans:bean>

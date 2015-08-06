@@ -22,6 +22,7 @@
         <put-list-attribute name="javascripts">
             <add-attribute value="../js/libs/jquery-1.11.3.js"/>
             <add-attribute value="../js/libs/jquery-ui.js"/>
+            <add-attribute value="../js/libs/jquery.blockUI.js" />
             <add-attribute value="../js/libs/bootstrap.min.js"/>
             <add-attribute value="../js/libs/jquery.magnific-popup.min.js"/>
             <add-attribute value="../js/libs/howl.js"/>

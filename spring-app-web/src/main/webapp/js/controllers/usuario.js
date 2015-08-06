@@ -51,9 +51,12 @@ $(document).ready(function () {
 
     btnAdd.click(function () {
         $.limpiarCampos($('#formUsuario'));
+        $('#styledModal').modal('show');
+        window.location.href = "#styledModal";
+        //$('#styledModal').popup('open');
         $('#idUsuario').val('0');
         dialog.dialog('option', 'title', 'Nuevo Usuario');
-        dialog.dialog('open');
+        //dialog.dialog('open');
     });
 
     btnSearch.click(function () {
@@ -74,15 +77,30 @@ $(document).ready(function () {
                 type: 'GET',
                 dataType: 'JSON',
                 data: {'identificacion': datos.idUsuario},
+                beforeSend: function () {
+                    $.blockUI({
+                        message:'Espere, por favor...' ,
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }});
+                },
                 success: function (data) {
                     console.log(data);
                     $('#idUsuario').val(data.respuesta.idUsuario);
                     $('#usuario').val(data.respuesta.usuario);
                     $('#contrasenna').val(data.respuesta.contrasenna);
+                    $.unblockUI();
                     dialog.dialog('option', 'title', 'Editar Usuario');
                     dialog.dialog('open');
                 },
                 error: function () {
+                    $.unblockUI();
                     $.howl({
                         type: $(this).data('type'),
                         title: 'Advertencia',
@@ -123,11 +141,13 @@ $(document).ready(function () {
             data: $('#formUsuario').serialize(),
             //data: JSON.stringify($.serializeObject($('#formUsuario'))),
             success: function (data) {
-                if (!data.hasOwnProperty('error')) {
+                if (!data.hasOwnProperty('errorActual')) {
                     jqgrid.trigger("reloadGrid");
+                    $('#styledModal').modal('show');
+                    dialog.dialog('close');
                 }
                 else {
-                    alert('Ocurrio un error eliminando el registro');
+                    alert('Ocurrio un error agregando el registro');
                 }
             },
             error: function (error) {
