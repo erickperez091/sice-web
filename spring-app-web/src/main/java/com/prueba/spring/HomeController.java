@@ -5,14 +5,18 @@
  */
 package com.prueba.spring;
 
+import com.prueba.spring.bussiness.impl.IntentosLoginBL;
+import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UrlPathHelper;
 
 /**
  *
@@ -22,9 +26,20 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/Home")
 public class HomeController {
 
+    @Autowired
+    IntentosLoginBL intentosBL;
+
+    public IntentosLoginBL getIntentosBL() {
+        return intentosBL;
+    }
+
+    public void setIntentosBL(IntentosLoginBL intentosBL) {
+        this.intentosBL = intentosBL;
+    }
+    
     @RequestMapping(value = "/Principal", method = RequestMethod.GET)
-    public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("Principal");
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+        return new ModelAndView("Principal", "usuario", principal.getName());
     }
 
     @RequestMapping(value = {"", "/", "/Login"}, method = RequestMethod.GET)
@@ -37,18 +52,25 @@ public class HomeController {
         HttpSession session = request.getSession(false);
         BadCredentialsException exception = session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION") == null ? new BadCredentialsException("") : (BadCredentialsException) session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
         String username = exception.getAuthentication().getPrincipal().toString();
+        this.getIntentosBL().actualizarIntentosFallidos(username);
         return new ModelAndView("redirect:/Home/Login?error=true");
     }
 
     @RequestMapping(value = "/Logout", method = RequestMethod.GET)
     public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("Login");
+        return new ModelAndView("Login?Logout=true");
     }
 
     @RequestMapping(value = "/Forbidden", method = RequestMethod.GET)
     public ModelAndView forbidden(HttpServletRequest request, HttpServletResponse response) {
         //return "redirect:/Home/Principal?forbidden=true";
-
+        String a = request.getServletPath();
+        String b = request.getPathTranslated();
+//        String b = request.getContextPath();
+        String c = request.getRequestURI();
+        String d = request.getRequestURL().toString();
+        String e = request.getHeader("referer");
+        String path = new UrlPathHelper().getPathWithinApplication(request);
         return new ModelAndView("redirect:/Home/Principal?forbidden=true");
     }
 }

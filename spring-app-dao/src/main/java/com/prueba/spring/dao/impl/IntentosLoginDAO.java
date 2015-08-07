@@ -46,7 +46,7 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
             session.update(intentos);
             
             if(intentos.getCantidad() >= 3){
-                throw new LockedException("");
+                throw new LockedException("User Locked");
             }
         }
     }

@@ -22,10 +22,9 @@
     <ul class="nav navbar-nav pull-right">
         <li class="">
             <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-                <i class="fa fa-user"></i
-                <sec:authentication var="principal" property="principal" />
-                ${pageContext.request.userPrincipal.name}
-                ${principal.username}
+                <i class="fa fa-user"></i>
+               
+                ${usuario}
                 <span class="caret"></span>
             </a>
 
