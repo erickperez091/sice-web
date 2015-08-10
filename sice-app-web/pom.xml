@@ -12,7 +12,7 @@
     <artifactId>sice-app-web</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>sice-app-web Maven Webapp</name>
+    <name>sice-app-web</name>
     <url>http://maven.apache.org</url>
 
     <properties>
