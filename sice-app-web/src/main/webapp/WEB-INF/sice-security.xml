@@ -44,25 +44,6 @@
     <beans:bean id="customAuthenticationFailureHandler" class="com.sice.pckg.authentication.CustomAuthenticationFailureHandler">
     </beans:bean>
     
-    <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
-        <beans:property name="exceptionMappings">
-            <beans:map>
-                <beans:entry key="org.springframework.security.authentication.BadCredentialsException" value="/Home/BadCredentials"></beans:entry>
-                <beans:entry key="org.springframework.security.authentication.LockedException" value="/Home/Login?error=1"></beans:entry>
-            </beans:map>
-        </beans:property>
-    </beans:bean>
-    
-    <!--<authentication-manager>
-        <authentication-provider ref="customAuthenticationProvider">
-        </authentication-provider>
-    </authentication-manager>-->
-    
-    <!--<beans:bean id="daoAuthenticationProvider" class="com.sice.pckg.authentication.CustomAuthenticationProvider">
-        <beans:property name="saltSource" ref="saltSource" />
-        <beans:property name="passwordEncoder" ref="passwordEncoder" />
-    </beans:bean>-->
-    
     <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder">
         <beans:constructor-arg index="0" value="MD5"></beans:constructor-arg>
     </beans:bean>
