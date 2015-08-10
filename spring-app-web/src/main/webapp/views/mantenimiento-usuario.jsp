@@ -37,26 +37,7 @@
 
 <div id="dialog-form" title="Nuevo Usuario">
     <p class="validateTips"></p>
-    <form:form id="formUsuario" modelAttribute="usuario">
-        <form:hidden id="idUsuario" path="idUsuario" />
-        <fieldset>
-            <table>
-                <tr>
-                    <td><label for="usuario">Nombre de Usuario: &nbsp;
-                            &nbsp;</label></td>
-                    <td><form:input type="text" path="usuario"
-                                id="usuario" class="text ui-widget-content ui-corner-all" /></td>
-                </tr>
-                <tr>
-                    <td><label for="contrasenna">Contrase&ntilde;a: &nbsp;</label></td>
-                    <td><form:password path="contrasenna" id="contrasenna" class="text ui-widget-content ui-corner-all" /></td>
-                </tr>
-            </table>
-            <br />
-            <button id="btnAccept" type="button" class="btn btn-primary">Aceptar</button>
-            <button id="btnCancel" type="button" class="btn btn-secondary">Cancelar</button>
-        </fieldset>
-    </form:form>
+
 </div>
 
 
@@ -64,16 +45,36 @@
 <div id="styledModal" class="modal modal-styled fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3 class="modal-title">Usuario</h3>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-tertiary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form:form id="formUsuario" modelAttribute="usuario">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">Usuario</h3>
+                </div>
+                <div class="modal-body">
+
+                    <form:hidden id="idUsuario" path="idUsuario" />
+                    <fieldset>
+                        <table>
+                            <tr>
+                                <td><label for="usuario">Nombre de Usuario: &nbsp;
+                                        &nbsp;</label></td>
+                                <td><form:input type="text" path="usuario"
+                                            id="usuario" class="text ui-widget-content ui-corner-all" /></td>
+                            </tr>
+                            <tr>
+                                <td><label for="contrasenna">Contrase&ntilde;a: &nbsp;</label></td>
+                                <td><form:password path="contrasenna" id="contrasenna" class="text ui-widget-content ui-corner-all" /></td>
+                            </tr>
+                        </table>
+                        <br />
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCancel" type="button" class="btn btn-tertiary" data-dismiss="modal">Close</button>
+                    <button id="btnAccept" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </form:form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

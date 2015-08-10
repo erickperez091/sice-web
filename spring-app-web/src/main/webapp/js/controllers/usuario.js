@@ -11,6 +11,7 @@ $(document).ready(function () {
     var btnDel = $('#btnDel');
     var btnAccept = $('#btnAccept');
     var btnCancel = $('#btnCancel');
+    var usuarioForm = $('#styledModal');
     var usuario;
 
     var jqgrid = $('#jqgrid').jqGrid({
@@ -51,8 +52,7 @@ $(document).ready(function () {
 
     btnAdd.click(function () {
         $.limpiarCampos($('#formUsuario'));
-        $('#styledModal').modal('show');
-        window.location.href = "#styledModal";
+        usuarioForm.modal('show');
         //$('#styledModal').popup('open');
         $('#idUsuario').val('0');
         dialog.dialog('option', 'title', 'Nuevo Usuario');
@@ -78,17 +78,7 @@ $(document).ready(function () {
                 dataType: 'JSON',
                 data: {'identificacion': datos.idUsuario},
                 beforeSend: function () {
-                    $.blockUI({
-                        message:'Espere, por favor...' ,
-                        css: {
-                            border: 'none',
-                            padding: '15px',
-                            backgroundColor: '#000',
-                            '-webkit-border-radius': '10px',
-                            '-moz-border-radius': '10px',
-                            opacity: .5,
-                            color: '#fff'
-                        }});
+                    $.lockScreen();
                 },
                 success: function (data) {
                     console.log(data);
@@ -96,8 +86,7 @@ $(document).ready(function () {
                     $('#usuario').val(data.respuesta.usuario);
                     $('#contrasenna').val(data.respuesta.contrasenna);
                     $.unblockUI();
-                    dialog.dialog('option', 'title', 'Editar Usuario');
-                    dialog.dialog('open');
+                    usuarioForm.modal('show');
                 },
                 error: function () {
                     $.unblockUI();
@@ -140,11 +129,13 @@ $(document).ready(function () {
             dataType: 'JSON',
             data: $('#formUsuario').serialize(),
             //data: JSON.stringify($.serializeObject($('#formUsuario'))),
+            beforeSend: function () {
+                $.lockScreen();
+            },
             success: function (data) {
-                if (!data.hasOwnProperty('errorActual')) {
+                if (!data.errorActual) {
                     jqgrid.trigger("reloadGrid");
-                    $('#styledModal').modal('show');
-                    dialog.dialog('close');
+                    usuarioForm.modal('hide');
                 }
                 else {
                     alert('Ocurrio un error agregando el registro');
@@ -212,6 +203,20 @@ $(document).ready(function () {
             }
         });
         return o;
+    };
+
+    $.lockScreen = function () {
+        $.blockUI({
+            message: 'Espere, por favor...',
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }});
     };
 
     $(window).bind('resize', function () {

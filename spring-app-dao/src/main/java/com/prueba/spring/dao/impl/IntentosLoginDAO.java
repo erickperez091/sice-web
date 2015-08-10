@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
@@ -29,23 +30,27 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
     private Session session;
     private Transaction tx;
     private static final String SQL_USERS_COUNT = "SELECT count(*) FROM USERS WHERE username = ?";
+    private static final String SQL_USERS_UPDATE_LOCKED = "UPDATE USUARIO SET bloqueado = ? WHERE usuario = ?";
 
     public void actualizarIntentosFallidos(String usuario) throws HibernateException {
         IntentosLogin intentos = this.obtenerIntentosLogin(usuario).getRespuesta();
         boolean existe = this.usuarioExiste(usuario);
         if (intentos == null) {
-            if(existe){
+            if (existe) {
                 intentos = new IntentosLogin(0, usuario, 1, new java.util.Date());
                 session.save(intentos);
             }
-        }
-        else{
+        } else {
             //Aqui se actualiza la cantidad de intentos
-            intentos.setCantidad(intentos.getCantidad()+1);
+            intentos.setCantidad(intentos.getCantidad() + 1);
             intentos.setUltimaModificacion(new java.util.Date());
             session.update(intentos);
-            
-            if(intentos.getCantidad() >= 3){
+
+            if (intentos.getCantidad() >= 3) {
+                Query query = session.createQuery(SQL_USERS_UPDATE_LOCKED);
+                query.setBoolean(1, true);
+                query.setString(2, usuario);
+                int i = query.executeUpdate();
                 throw new LockedException("User Locked");
             }
         }
@@ -79,11 +84,10 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
             int count = (int) Math.max(Math.min(Integer.MAX_VALUE, rowCount), Integer.MIN_VALUE);
             existe = count > 0;
         } catch (Exception ex) {
-            Logger.getLogger(IntentosLogin.class.getName()).log(Level.SEVERE,null,ex);
+            Logger.getLogger(IntentosLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         return existe;
     }
-
 
     private void iniciaOperacion() throws HibernateException {
         try {

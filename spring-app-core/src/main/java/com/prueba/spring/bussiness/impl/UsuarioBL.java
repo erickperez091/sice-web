@@ -34,6 +34,7 @@ public class UsuarioBL implements IBussiness<Usuario>{
     
     @Override
     public Respuesta guardar(Usuario usuario) {
+        usuario.setHabilitado(true);
         return this.getUsuarioDAO().guardar(usuario);
     }
 
