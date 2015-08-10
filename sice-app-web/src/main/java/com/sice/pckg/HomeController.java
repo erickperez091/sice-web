@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UrlPathHelper;
 
 /**
  *
@@ -68,15 +67,9 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/Forbidden", method = RequestMethod.GET)
-    public ModelAndView forbidden(HttpServletRequest request, HttpServletResponse response) {
-        //return "redirect:/Home/Principal?forbidden=true";
-        String a = request.getServletPath();
-        String b = request.getPathTranslated();
-//        String b = request.getContextPath();
-        String c = request.getRequestURI();
-        String d = request.getRequestURL().toString();
-        String e = request.getHeader("referer");
-        String path = new UrlPathHelper().getPathWithinApplication(request);
+    public ModelAndView forbidden(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+        //return "redirect:/Home/Principal?forbidden=true"
+        //return new ModelAndView("redirect:/Home/Prohibido");
         return new ModelAndView("redirect:/Home/Principal?forbidden=true");
     }
 }

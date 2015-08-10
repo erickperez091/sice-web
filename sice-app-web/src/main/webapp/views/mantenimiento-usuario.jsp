@@ -34,14 +34,6 @@
 </div> <!-- #content -->	
 
 
-
-<div id="dialog-form" title="Nuevo Usuario">
-    <p class="validateTips"></p>
-
-</div>
-
-
-
 <div id="styledModal" class="modal modal-styled fade">
     <div class="modal-dialog">
         <div class="modal-content">

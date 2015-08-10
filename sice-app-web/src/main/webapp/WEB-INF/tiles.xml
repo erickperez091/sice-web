@@ -47,6 +47,8 @@
         <put-attribute name="current" value="Principal" cascade="true"/>
     </definition>
     
+    
+    
     <definition name="Mantenimiento-Usuarios" extends="defaultTemplate">
         <put-attribute name="title" value="Mantenimiento de Usuarios" />
         <put-attribute name="body" value="/views/mantenimiento-usuario.jsp" />
