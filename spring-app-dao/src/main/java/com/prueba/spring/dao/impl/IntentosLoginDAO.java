@@ -8,6 +8,7 @@ package com.prueba.spring.dao.impl;
 import com.prueba.spring.entidades.IntentosLogin;
 import com.prueba.spring.entidades.Usuario;
 import com.prueba.spring.entidades.util.RespuestaGenerica;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Criteria;
@@ -25,12 +26,12 @@ import org.springframework.security.authentication.LockedException;
  * @author Erick
  */
 public class IntentosLoginDAO extends HibernateDaoSupport {
-
+    
     private Session session;
     private Transaction tx;
     private static final String SQL_USERS_COUNT = "SELECT count(*) FROM USERS WHERE username = ?";
     private static final String SQL_USERS_UPDATE_LOCKED = "UPDATE Usuario SET bloqueado = :bloqueado WHERE usuario = :usuario";
-
+    
     public void actualizarIntentosFallidos(String usuario) throws HibernateException {
         IntentosLogin intentos = this.obtenerIntentosLogin(usuario).getRespuesta();
         boolean existe = this.usuarioExiste(usuario);
@@ -39,6 +40,7 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
                 intentos = new IntentosLogin(0, usuario, 1, new java.util.Date());
                 session.save(intentos);
                 tx.commit();
+                session.close();
             }
         } else {
             //Aqui se actualiza la cantidad de intentos
@@ -48,14 +50,31 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
             tx.commit();
             if (intentos.getCantidad() >= 3) {
                 int result = session.createQuery(SQL_USERS_UPDATE_LOCKED).setParameter("bloqueado", true).setParameter("usuario", usuario).executeUpdate();
+                session.close();
                 throw new LockedException("User account is locked ");
             }
         }
     }
-
+    
     public void reiniciarIntentosFallidos(String usuario) throws HibernateException {
+        try {
+            IntentosLogin intentos = this.obtenerIntentosLogin(usuario).getRespuesta();
+            if (intentos != null) {
+                intentos.setCantidad(0);
+                intentos.setUltimaModificacion(new Date());
+                session.update(intentos);
+                tx.commit();
+            }
+        } catch (Exception ex) {
+        } finally {
+            try {
+                session.close();
+            } catch (Exception ex) {
+                Logger.getLogger(IntentosLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
-
+    
     private RespuestaGenerica<IntentosLogin> obtenerIntentosLogin(String usuario) throws HibernateException {
         @SuppressWarnings("UnusedAssignment")
         IntentosLogin intentos = null;
@@ -71,7 +90,7 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
         }
         return respuesta;
     }
-
+    
     @Transactional(readOnly = true)
     private boolean usuarioExiste(String usuario) throws HibernateException {
         boolean existe = false;
@@ -87,7 +106,7 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
         }
         return existe;
     }
-
+    
     private void iniciaOperacion() throws HibernateException {
         try {
             session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
