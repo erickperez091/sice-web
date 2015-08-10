@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
@@ -58,7 +57,9 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
     }
 
     private RespuestaGenerica<IntentosLogin> obtenerIntentosLogin(String usuario) throws HibernateException {
+        @SuppressWarnings("UnusedAssignment")
         IntentosLogin intentos = null;
+        @SuppressWarnings("UnusedAssignment")
         RespuestaGenerica<IntentosLogin> respuesta = null;
         try {
             this.iniciaOperacion();

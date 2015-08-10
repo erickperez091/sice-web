@@ -6,7 +6,6 @@
 package com.prueba.spring.dao.impl;
 
 import com.prueba.spring.dao.IDAO;
-import com.prueba.spring.entidades.Colaborador;
 import com.prueba.spring.entidades.Evento;
 import com.prueba.spring.entidades.util.Respuesta;
 import com.prueba.spring.entidades.util.RespuestaGenerica;
@@ -36,6 +35,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
     private Transaction tx;
 
     @Transactional
+    @Override
     public Respuesta guardar(Evento evento) {
         Respuesta respuesta;
         try {
@@ -58,6 +58,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
     }
 
     @Transactional
+    @Override
     public Respuesta actualizar(Evento evento) {
         Respuesta respuesta;
         try {
@@ -80,6 +81,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
     }
 
     @Transactional
+    @Override
     public Respuesta eliminar(Evento evento) {
         Respuesta respuesta;
         try {
@@ -102,6 +104,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public RespuestaGenerica<Evento> obtener(int id) {
         Evento evento;
         RespuestaGenerica<Evento> respuesta;
@@ -109,7 +112,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
             this.iniciaOperacion();
             Criteria criteria = session.createCriteria(Evento.class).add(Restrictions.eq("idEvento", id));
             evento = (Evento) criteria.uniqueResult();
-            respuesta = new RespuestaGenerica<Evento>(evento);
+            respuesta = new RespuestaGenerica<>(evento);
         } catch (Exception ex) {
             Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = new RespuestaGenerica(ex);
@@ -124,17 +127,19 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public RespuestaGenerica<List<Evento>> listar() {
+        @SuppressWarnings("UnusedAssignment")
         List<Evento> lista = null;
         RespuestaGenerica<List<Evento>> respuesta;
         try {
             this.iniciaOperacion();
             Query consulta = session.createQuery("FROM Evento e");
             lista = consulta.list();
-            respuesta = new RespuestaGenerica<List<Evento>>(lista);
+            respuesta = new RespuestaGenerica<>(lista);
         } catch (Exception ex) {
             Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, null, ex);
-            respuesta = new RespuestaGenerica<List<Evento>>(ex);
+            respuesta = new RespuestaGenerica<>(ex);
         } finally {
             try {
                 session.close();
@@ -146,6 +151,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public RespuestaGenerica<Integer> cantidadRegistros() {
         RespuestaGenerica<Integer> respuesta;
         try {
@@ -154,7 +160,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
             criteria.setProjection(Projections.rowCount());
             long rowCount = (Long) criteria.uniqueResult();
             int count = (int) Math.max(Math.min(Integer.MAX_VALUE, rowCount), Integer.MIN_VALUE);
-            respuesta = new RespuestaGenerica<Integer>(count);
+            respuesta = new RespuestaGenerica<>(count);
         } catch (Exception ex) {
             Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = new RespuestaGenerica(ex);
@@ -172,7 +178,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
     public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual, int cantidadRegistros) {
         RespuestaGenerica<jqGridModel> respuesta;
         try {
-            jqGridModel<Evento> model = new jqGridModel<Evento>();
+            jqGridModel<Evento> model = new jqGridModel<>();
             model.setPage(paginaActual);
             model.setRecords(this.cantidadRegistros().getRespuesta());
             model.setTotal((int) Math.ceil((double) model.getRecords() / (double) cantidadRegistros));
@@ -185,10 +191,10 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
                 criteria.addOrder(Order.desc(indice));
             }
             model.setRows(criteria.list());
-            respuesta = new RespuestaGenerica<jqGridModel>(model);
+            respuesta = new RespuestaGenerica<>(model);
         } catch (Exception ex) {
             Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, null, ex);
-            respuesta = new RespuestaGenerica<jqGridModel>(ex);
+            respuesta = new RespuestaGenerica<>(ex);
         } finally {
             try {
                 session.close();
@@ -208,7 +214,7 @@ public class EventoDAO extends HibernateDaoSupport implements IDAO<Evento> {
             criteria.createAlias("colaboradores", "c", JoinType.LEFT_OUTER_JOIN)
                     .add(Restrictions.or(Restrictions.ne("c.idColaborador", idColaborador), Restrictions.isNull("c.idColaborador")));
             List<Evento> eventos = criteria.list();
-            respuesta = new RespuestaGenerica<List<Evento>>(eventos);
+            respuesta = new RespuestaGenerica<>(eventos);
         } catch (Exception ex) {
             Logger.getLogger(EventoDAO.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = new RespuestaGenerica(ex);

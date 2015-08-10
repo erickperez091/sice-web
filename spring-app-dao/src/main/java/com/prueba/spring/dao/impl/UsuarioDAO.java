@@ -142,6 +142,7 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
     @Transactional(readOnly = true)
     @Override
     public RespuestaGenerica<List<Usuario>> listar() {
+        @SuppressWarnings("UnusedAssignment")
         List<Usuario> lista = null;
         RespuestaGenerica<List<Usuario>> respuesta;
         try {
@@ -171,7 +172,7 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
             criteria.setProjection(Projections.rowCount());
             long rowCount = (Long) criteria.uniqueResult();
             int count = (int) Math.max(Math.min(Integer.MAX_VALUE, rowCount), Integer.MIN_VALUE);
-            respuesta = new RespuestaGenerica<Integer>(count);
+            respuesta = new RespuestaGenerica<>(count);
         } catch (Exception ex) {
             Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = new RespuestaGenerica(ex);

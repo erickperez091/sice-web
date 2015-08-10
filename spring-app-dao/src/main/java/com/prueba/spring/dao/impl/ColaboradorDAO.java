@@ -126,7 +126,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             Criteria criteria = session.createCriteria(Colaborador.class).add(
                     Restrictions.eq("idColaborador", id));
             colaborador = (Colaborador) criteria.uniqueResult();
-            respuesta = new RespuestaGenerica<Colaborador>(colaborador);
+            respuesta = new RespuestaGenerica<>(colaborador);
         } catch (Exception ex) {
             Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
                     null, ex);
@@ -146,16 +146,17 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
     @Override
     public RespuestaGenerica<List<Colaborador>> listar() {
         RespuestaGenerica<List<Colaborador>> respuesta;
+        @SuppressWarnings("UnusedAssignment")
         List<Colaborador> lista = null;
         try {
             this.iniciaOperacion();
             Query consulta = session.createQuery("FROM Colaborador c");
             lista = consulta.list();
-            respuesta = new RespuestaGenerica<List<Colaborador>>(lista);
+            respuesta = new RespuestaGenerica<>(lista);
         } catch (Exception ex) {
             Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
                     null, ex);
-            respuesta = new RespuestaGenerica<List<Colaborador>>(ex);
+            respuesta = new RespuestaGenerica<>(ex);
         } finally {
             try {
                 // session.close();
@@ -176,7 +177,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             criteria.setProjection(Projections.rowCount());
             long rowCount = (Long) criteria.uniqueResult();
             int count = (int) Math.max(Math.min(Integer.MAX_VALUE, rowCount), Integer.MIN_VALUE);
-            respuesta = new RespuestaGenerica<Integer>(count);
+            respuesta = new RespuestaGenerica<>(count);
         } catch (Exception ex) {
             Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = new RespuestaGenerica(ex);
@@ -189,7 +190,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
         RespuestaGenerica<jqGridModel> respuesta;
         try {
             this.iniciaOperacion();
-            jqGridModel<Colaborador> model = new jqGridModel<Colaborador>();
+            jqGridModel<Colaborador> model = new jqGridModel<>();
             model.setPage(paginaActual);
             model.setRecords(this.cantidadRegistros().getRespuesta());
             model.setTotal((int) Math.ceil((double) model.getRecords() / (double) cantidadRegistros));
@@ -202,10 +203,10 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
                 criteria.addOrder(Order.desc(indice));
             }
             model.setRows(criteria.list());
-            respuesta = new RespuestaGenerica<jqGridModel>(model);
+            respuesta = new RespuestaGenerica<>(model);
         } catch (Exception ex) {
             Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
-            respuesta = new RespuestaGenerica<jqGridModel>(ex);
+            respuesta = new RespuestaGenerica<>(ex);
         } finally {
             try {
                 session.close();
