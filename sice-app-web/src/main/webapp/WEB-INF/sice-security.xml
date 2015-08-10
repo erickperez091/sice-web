@@ -42,10 +42,7 @@
     </authentication-manager>
     
     <beans:bean id="customAuthenticationFailureHandler" class="com.sice.pckg.authentication.CustomAuthenticationFailureHandler">
-        <beans:property name="redirectStrategy" ref="customRedirectStrategy"></beans:property>
     </beans:bean>
-    
-    <beans:bean id="customRedirectStrategy" class="com.sice.pckg.authentication.CustomRedirectStrategy" />
     
     <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
         <beans:property name="exceptionMappings">
@@ -65,11 +62,6 @@
         <beans:property name="saltSource" ref="saltSource" />
         <beans:property name="passwordEncoder" ref="passwordEncoder" />
     </beans:bean>-->
-    
-    <beans:bean id="customAuthenticationProvider" class="com.sice.pckg.authentication.CustomAuthenticationProvider">
-        <beans:property name="saltSource" ref="saltSource" />
-        <beans:property name="passwordEncoder" ref="passwordEncoder" />
-    </beans:bean>
     
     <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder">
         <beans:constructor-arg index="0" value="MD5"></beans:constructor-arg>
