@@ -214,11 +214,13 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        @SuppressWarnings("UnusedAssignment")
         Usuario usuario = null;
         try {
             this.iniciaOperacion();
             Criteria criteria = session.createCriteria(Usuario.class).add(Restrictions.eq("usuario", username));
             usuario = (Usuario) criteria.uniqueResult();
+            //Falta obtener/crear los roles para los diferentes usuarios
             ArrayList<GrantedAuthority> listaRoles = new ArrayList<>();
             listaRoles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             return new User(usuario.getUsuario(), usuario.getContrasenna(), usuario.isHabilitado(), true, true, !usuario.isBloqueado(), listaRoles);
