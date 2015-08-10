@@ -24,16 +24,22 @@
         <logout logout-url="/Home/Logout" invalidate-session="true" delete-cookies="JSESSIONID"/>
     </http>
     
-    <!--authentication-failure-handler-ref="customAuthenticationFailureHandler"-->
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="usuarioDAO">
+            <password-encoder ref="passwordEncoder">
+                <salt-source ref="saltSource" />
+            </password-encoder>
+        </authentication-provider>
+    </authentication-manager>
     
-    <authentication-manager>
+    <!--<authentication-manager>
         <authentication-provider>
             <user-service>
                 <user name="admin" password="admin" authorities="ROLE_ADMIN"></user>
                 <user name="prueba" password="prueba" authorities="ROLE_USER"></user>
             </user-service>
         </authentication-provider>
-    </authentication-manager>
+    </authentication-manager>-->
     
     <beans:bean id="customAuthenticationFailureHandler" class="com.prueba.spring.authentication.CustomAuthenticationFailureHandler">
         <beans:property name="redirectStrategy" ref="customRedirectStrategy"></beans:property>
@@ -45,6 +51,7 @@
         <beans:property name="exceptionMappings">
             <beans:map>
                 <beans:entry key="org.springframework.security.authentication.BadCredentialsException" value="/Home/BadCredentials"></beans:entry>
+                <beans:entry key="org.springframework.security.authentication.LockedException" value="/Home/Login?error=1"></beans:entry>
             </beans:map>
         </beans:property>
     </beans:bean>

@@ -26,6 +26,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -217,12 +219,14 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
             this.iniciaOperacion();
             Criteria criteria = session.createCriteria(Usuario.class).add(Restrictions.eq("usuario", username));
             usuario = (Usuario) criteria.uniqueResult();
-            return new User(usuario.getUsuario(), usuario.getContrasenna(),usuario.isHabilitado(),true,true,usuario.isBloqueado(), null);
+            ArrayList<GrantedAuthority> listaRoles = new ArrayList<>();
+            listaRoles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            return new User(usuario.getUsuario(), usuario.getContrasenna(), usuario.isHabilitado(), true, true, !usuario.isBloqueado(), listaRoles);
         } catch (Exception ex) {
             throw ex;
         }
     }
-    
+
     private void iniciaOperacion() throws HibernateException {
         try {
             session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();

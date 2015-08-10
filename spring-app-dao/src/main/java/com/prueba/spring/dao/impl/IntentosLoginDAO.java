@@ -30,7 +30,7 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
     private Session session;
     private Transaction tx;
     private static final String SQL_USERS_COUNT = "SELECT count(*) FROM USERS WHERE username = ?";
-    private static final String SQL_USERS_UPDATE_LOCKED = "UPDATE USUARIO SET bloqueado = ? WHERE usuario = ?";
+    private static final String SQL_USERS_UPDATE_LOCKED = "UPDATE Usuario SET bloqueado = :bloqueado WHERE usuario = :usuario";
 
     public void actualizarIntentosFallidos(String usuario) throws HibernateException {
         IntentosLogin intentos = this.obtenerIntentosLogin(usuario).getRespuesta();
@@ -39,19 +39,18 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
             if (existe) {
                 intentos = new IntentosLogin(0, usuario, 1, new java.util.Date());
                 session.save(intentos);
+                tx.commit();
             }
         } else {
             //Aqui se actualiza la cantidad de intentos
             intentos.setCantidad(intentos.getCantidad() + 1);
             intentos.setUltimaModificacion(new java.util.Date());
             session.update(intentos);
-
+            tx.commit();
             if (intentos.getCantidad() >= 3) {
-                Query query = session.createQuery(SQL_USERS_UPDATE_LOCKED);
-                query.setBoolean(1, true);
-                query.setString(2, usuario);
+                Query query = session.createQuery(SQL_USERS_UPDATE_LOCKED).setParameter("bloqueado", true).setParameter("usuario", usuario);
                 int i = query.executeUpdate();
-                throw new LockedException("User Locked");
+                throw new LockedException("User account is locked ");
             }
         }
     }

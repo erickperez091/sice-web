@@ -36,7 +36,7 @@ public class HomeController {
     public void setIntentosBL(IntentosLoginBL intentosBL) {
         this.intentosBL = intentosBL;
     }
-    
+
     @RequestMapping(value = "/Principal", method = RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response, Principal principal) {
         return new ModelAndView("Principal", "usuario", principal.getName());
@@ -52,8 +52,13 @@ public class HomeController {
         HttpSession session = request.getSession(false);
         BadCredentialsException exception = session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION") == null ? new BadCredentialsException("") : (BadCredentialsException) session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
         String username = exception.getAuthentication().getPrincipal().toString();
-        this.getIntentosBL().actualizarIntentosFallidos(username);
-        return new ModelAndView("redirect:/Home/Login?error=true");
+        try {
+            this.getIntentosBL().actualizarIntentosFallidos(username);
+            return new ModelAndView("redirect:/Home/Login?error=true");
+        } catch (Exception ex) {
+            session.setAttribute("SPRING_SECURITY_LAST_EXCEPTION", ex);
+            return new ModelAndView("redirect:/Home/Login?error=true");
+        }
     }
 
     @RequestMapping(value = "/Logout", method = RequestMethod.GET)

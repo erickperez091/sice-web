@@ -15,7 +15,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 /**
@@ -33,18 +32,19 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         this.saveException(request, exception);
         if (exception.getClass().isAssignableFrom(UsernameNotFoundException.class)) {
             System.out.println("Usuario no encontrado");
+            target.append("/Home/Login?error=1");
         } else if (exception.getClass().isAssignableFrom(DisabledException.class)) {
             System.out.println("Usuario Deshabilitado");
+            target.append("/Home/Login?error=1");
         } else if (exception.getClass().isAssignableFrom(LockedException.class)) {
             System.out.println("Usuario Bloqueado");
+            target.append("/Home/Login?error=1");
         } else if (exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
             System.out.println("Contraseña Incorrecta");
             target.append("/Home/BadCredentials");
-            
-            //
-            //request.getRequestDispatcher(target).forward(request, response);
         } else if (exception.getClass().isAssignableFrom(CredentialsExpiredException.class)) {
             System.out.println("Contraseña expirada");
+            target.append("/Home/Login?error=1");
         }
         this.setDefaultFailureUrl(target.toString());
         this.getRedirectStrategy().sendRedirect(request, response, target.toString());

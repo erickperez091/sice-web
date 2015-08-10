@@ -26,10 +26,14 @@ public class IntentosLoginBL {
     }
 
     public void actualizarIntentosFallidos(String usuario) {
-        this.getIntentosDAO().actualizarIntentosFallidos(usuario);
+        try {
+            this.getIntentosDAO().actualizarIntentosFallidos(usuario);
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
-    public void reiniciarIntentosFallidos(String usuario){
+    public void reiniciarIntentosFallidos(String usuario) {
         this.getIntentosDAO().reiniciarIntentosFallidos(usuario);
     }
 }
