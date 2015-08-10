@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/security
+    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/Home/Login" security="none"/>
+    <http pattern="/Home/BadCredentials" security="none"/>
+    <http auto-config="true">
+        <session-management invalid-session-url="/Home/Login">
+            <concurrency-control max-sessions="1" expired-url="/Home/Login" />
+        </session-management>
+        <access-denied-handler error-page="/Home/Forbidden" />
+        <intercept-url pattern="/Usuario/*" access="ROLE_ADMIN" />
+        <intercept-url pattern="/*/*" access="ROLE_ADMIN,ROLE_USER"/>
+        <form-login login-page="/Home/Login" default-target-url="/Home/Principal" 
+                    authentication-failure-handler-ref="customAuthenticationFailureHandler"
+                    always-use-default-target="true"/>
+        <logout logout-url="/Home/Logout" invalidate-session="true" delete-cookies="JSESSIONID"/>
+    </http>
+    
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="usuarioDAO">
+            <password-encoder ref="passwordEncoder">
+                <salt-source ref="saltSource" />
+            </password-encoder>
+        </authentication-provider>
+    </authentication-manager>
+    
+    <!--<authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="admin" password="admin" authorities="ROLE_ADMIN"></user>
+                <user name="prueba" password="prueba" authorities="ROLE_USER"></user>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>-->
+    
+    <beans:bean id="customAuthenticationFailureHandler" class="com.sice.pckg.authentication.CustomAuthenticationFailureHandler">
+        <beans:property name="redirectStrategy" ref="customRedirectStrategy"></beans:property>
+    </beans:bean>
+    
+    <beans:bean id="customRedirectStrategy" class="com.sice.pckg.authentication.CustomRedirectStrategy" />
+    
+    <beans:bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
+        <beans:property name="exceptionMappings">
+            <beans:map>
+                <beans:entry key="org.springframework.security.authentication.BadCredentialsException" value="/Home/BadCredentials"></beans:entry>
+                <beans:entry key="org.springframework.security.authentication.LockedException" value="/Home/Login?error=1"></beans:entry>
+            </beans:map>
+        </beans:property>
+    </beans:bean>
+    
+    <!--<authentication-manager>
+        <authentication-provider ref="customAuthenticationProvider">
+        </authentication-provider>
+    </authentication-manager>-->
+    
+    <!--<beans:bean id="daoAuthenticationProvider" class="com.sice.pckg.authentication.CustomAuthenticationProvider">
+        <beans:property name="saltSource" ref="saltSource" />
+        <beans:property name="passwordEncoder" ref="passwordEncoder" />
+    </beans:bean>-->
+    
+    <beans:bean id="customAuthenticationProvider" class="com.sice.pckg.authentication.CustomAuthenticationProvider">
+        <beans:property name="saltSource" ref="saltSource" />
+        <beans:property name="passwordEncoder" ref="passwordEncoder" />
+    </beans:bean>
+    
+    <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder">
+        <beans:constructor-arg index="0" value="MD5"></beans:constructor-arg>
+    </beans:bean>
+    
+    <beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+        <beans:property name="userPropertyToUse" value="username"></beans:property>
+    </beans:bean>
+</beans:beans>
