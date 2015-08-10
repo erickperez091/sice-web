@@ -54,10 +54,10 @@ public class HomeController {
         String username = exception.getAuthentication().getPrincipal().toString();
         try {
             this.getIntentosBL().actualizarIntentosFallidos(username);
-            return new ModelAndView("redirect:/Home/Login?error=true");
+            return new ModelAndView("redirect:/Home/Login?error=userCredentials");
         } catch (Exception ex) {
             session.setAttribute("SPRING_SECURITY_LAST_EXCEPTION", ex);
-            return new ModelAndView("redirect:/Home/Login?error=true");
+            return new ModelAndView("redirect:/Home/Login?error=userLocked");
         }
     }
 

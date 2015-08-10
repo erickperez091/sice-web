@@ -48,8 +48,7 @@ public class IntentosLoginDAO extends HibernateDaoSupport {
             session.update(intentos);
             tx.commit();
             if (intentos.getCantidad() >= 3) {
-                Query query = session.createQuery(SQL_USERS_UPDATE_LOCKED).setParameter("bloqueado", true).setParameter("usuario", usuario);
-                int i = query.executeUpdate();
+                int result = session.createQuery(SQL_USERS_UPDATE_LOCKED).setParameter("bloqueado", true).setParameter("usuario", usuario).executeUpdate();
                 throw new LockedException("User account is locked ");
             }
         }

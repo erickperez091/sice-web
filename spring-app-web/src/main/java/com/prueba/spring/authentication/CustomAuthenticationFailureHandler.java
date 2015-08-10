@@ -32,19 +32,19 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         this.saveException(request, exception);
         if (exception.getClass().isAssignableFrom(UsernameNotFoundException.class)) {
             System.out.println("Usuario no encontrado");
-            target.append("/Home/Login?error=1");
+            target.append("/Home/Login?error=userNotFound");
         } else if (exception.getClass().isAssignableFrom(DisabledException.class)) {
             System.out.println("Usuario Deshabilitado");
-            target.append("/Home/Login?error=1");
+            target.append("/Home/Login?error=userDisabled");
         } else if (exception.getClass().isAssignableFrom(LockedException.class)) {
             System.out.println("Usuario Bloqueado");
-            target.append("/Home/Login?error=1");
+            target.append("/Home/Login?error=userLocked");
         } else if (exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
             System.out.println("Contraseña Incorrecta");
             target.append("/Home/BadCredentials");
         } else if (exception.getClass().isAssignableFrom(CredentialsExpiredException.class)) {
             System.out.println("Contraseña expirada");
-            target.append("/Home/Login?error=1");
+            target.append("/Home/Login?error=userPassword");
         }
         this.setDefaultFailureUrl(target.toString());
         this.getRedirectStrategy().sendRedirect(request, response, target.toString());
