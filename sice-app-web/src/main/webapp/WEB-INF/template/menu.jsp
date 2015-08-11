@@ -23,8 +23,7 @@
         <li class="">
             <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
                 <i class="fa fa-user"></i>
-               
-                ${usuario}
+                ${username}
                 <span class="caret"></span>
             </a>
 
@@ -57,6 +56,12 @@
                     <a href="<c:url value='/Usuario/Mantenimiento-Usuarios'/>">
                         <i class="fa fa-dashboard"></i>
                         Mantenimiento Usuarios
+                    </a>				
+                </li>
+                <li class="${current == 'mantenimientocolaborador' ? 'active' : ''}">				
+                    <a href="<c:url value='/Colaborador/Mantenimiento-Colaboradores'/>">
+                        <i class="fa fa-dashboard"></i>
+                        Mantenimiento Colaboradores
                     </a>				
                 </li>
             </sec:authorize>

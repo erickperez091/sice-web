@@ -66,4 +66,21 @@
         
     </definition>
     
+    
+    <definition name="Mantenimiento-Colaboradores" extends="defaultTemplate">
+        <put-attribute name="title" value="Mantenimiento de Colaborador" />
+        <put-attribute name="body" value="/views/mantenimiento-colaborador.jsp" />
+        <put-attribute name="current" value="mantenimientocolaborador" cascade="true"/>
+        <put-list-attribute name="javascripts" inherit="true">
+            <add-attribute value="../js/libs/jqgrid/jquery.jqGrid.min.js"/>
+            <add-attribute value="../js/libs/jqgrid/grid.locale-es.js"/>
+            <add-attribute value="../js/controllers/colaborador.js" />
+        </put-list-attribute>
+        
+        <put-list-attribute name="stylesheets" inherit="true">
+            <add-attribute value="../css/jqgrid/ui.jqgrid.css" />
+            <add-attribute value="../css/jqgrid/ui.jqgrid-bootstarp.css" />
+        </put-list-attribute>
+        
+    </definition>
 </tiles-definitions>

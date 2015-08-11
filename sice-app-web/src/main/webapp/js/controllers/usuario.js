@@ -43,20 +43,12 @@ $(document).ready(function () {
     });
 
 
-    var dialog = $("#dialog-form").dialog({
-        autoOpen: false,
-        height: 275,
-        width: 300,
-        modal: true
-    });
-
+    
     btnAdd.click(function () {
         $.limpiarCampos($('#formUsuario'));
         usuarioForm.modal('show');
         //$('#styledModal').popup('open');
         $('#idUsuario').val('0');
-        dialog.dialog('option', 'title', 'Nuevo Usuario');
-        //dialog.dialog('open');
     });
 
     btnSearch.click(function () {
@@ -140,15 +132,17 @@ $(document).ready(function () {
                 else {
                     alert('Ocurrio un error agregando el registro');
                 }
+                $.unblockUI();
             },
             error: function (error) {
+                $.unblockUI();
                 alert(error);
             }
         });
     });
 
     btnCancel.click(function () {
-        dialog.dialog('close');
+        usuarioForm.modal('hide');
     });
 
     $("#dialog-confirm").dialog({

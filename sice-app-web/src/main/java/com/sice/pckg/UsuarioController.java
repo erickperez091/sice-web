@@ -12,6 +12,9 @@ import com.sice.pckg.entidades.util.Respuesta;
 import com.sice.pckg.entidades.util.RespuestaGenerica;
 import com.sice.pckg.entidades.util.UtilEnum;
 import com.sice.pckg.entidades.util.jqGridModel;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +46,11 @@ public class UsuarioController {
     }
 
     @RequestMapping(value = "/Mantenimiento-Usuarios")
-    public ModelAndView mantenimientoUsuarios() {
-        return new ModelAndView("Mantenimiento-Usuarios", "usuario", new Usuario());
+    public ModelAndView mantenimientoUsuarios(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("usuario", new Usuario());
+        model.put("username", principal.getName());
+        return new ModelAndView("Mantenimiento-Usuarios", model);
     }
 
     @RequestMapping(value = "/ListarUsuarios")
@@ -85,10 +91,10 @@ public class UsuarioController {
         }
         return respuesta;
     }
-    
+
     @RequestMapping(value = "/ObtenerUsuario", method = RequestMethod.GET)
-    public @ResponseBody RespuestaGenerica<Usuario> obtenerUsuario(int identificacion, HttpServletRequest request, HttpServletResponse response)
-    {
+    public @ResponseBody
+    RespuestaGenerica<Usuario> obtenerUsuario(int identificacion, HttpServletRequest request, HttpServletResponse response) {
         RespuestaGenerica<Usuario> respuesta = this.getUsuarioBL().obtener(identificacion);
         if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

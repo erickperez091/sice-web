@@ -39,7 +39,7 @@ public class HomeController {
     @RequestMapping(value = "/Principal", method = RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response, Principal principal) {
         this.getIntentosBL().reiniciarIntentosFallidos(principal.getName());
-        return new ModelAndView("Principal", "usuario", principal.getName());
+        return new ModelAndView("Principal", "username", principal.getName());
     }
 
     @RequestMapping(value = {"", "/", "/Login"}, method = RequestMethod.GET)
