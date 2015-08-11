@@ -22,6 +22,34 @@
         <put-list-attribute name="javascripts">
             <add-attribute value="../js/libs/jquery-1.11.3.js"/>
             <add-attribute value="../js/libs/jquery-ui.js"/>
+            <add-attribute value="../js/libs/bootstrap.min.js"/>
+            <add-attribute value="../js/libs/App.js"/>
+        </put-list-attribute>
+        
+        <put-list-attribute name="stylesheets">
+            <add-attribute value="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,800italic,400,600,800" />
+            <add-attribute value="../css/font-awesome.css" />
+            <add-attribute value="../css/bootstrap.min.css" />
+            <add-attribute value="../css/jquery-ui/jquery-ui.min.css" />
+            <add-attribute value="../css/App.css" />
+            <add-attribute value="../css/custom.css" />
+        </put-list-attribute>
+    </definition>
+    
+    <definition name="crudTemplate" template="/WEB-INF/template/default.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="header" value="/WEB-INF/template/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/template/menu.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/template/footer.jsp" />
+        <put-attribute name="current" value="default"/>
+        <put-list-attribute name="javascripts">
+            <add-attribute value="../js/libs/jquery-1.11.3.js"/>
+            <add-attribute value="../js/util/jquery.util.js"/>
+            <add-attribute value="../js/libs/jquery-ui.js"/>
+            <add-attribute value="../js/libs/jqgrid/jquery.jqGrid.min.js"/>
+            <add-attribute value="../js/libs/jqgrid/grid.locale-es.js"/>
+            <add-attribute value="../js/libs/bootbox.min.js"/>
             <add-attribute value="../js/libs/jquery.blockUI.js" />
             <add-attribute value="../js/libs/bootstrap.min.js"/>
             <add-attribute value="../js/libs/jquery.magnific-popup.min.js"/>
@@ -34,12 +62,13 @@
             <add-attribute value="../css/font-awesome.css" />
             <add-attribute value="../css/bootstrap.min.css" />
             <add-attribute value="../css/jquery-ui/jquery-ui.min.css" />
-            <add-attribute value="../css/App.css" />
-            <add-attribute value="../css/custom.css" />
             <add-attribute value="../css/jqgrid/ui.jqgrid.css" />
             <add-attribute value="../css/jqgrid/ui.jqgrid-bootstarp.css" />
+            <add-attribute value="../css/App.css" />
+            <add-attribute value="../css/custom.css" />
         </put-list-attribute>
     </definition>
+    
     
     <definition name="Principal" extends="defaultTemplate">
         <put-attribute name="title" value="Inicio" />
@@ -47,40 +76,22 @@
         <put-attribute name="current" value="Principal" cascade="true"/>
     </definition>
     
-    
-    
-    <definition name="Mantenimiento-Usuarios" extends="defaultTemplate">
+    <definition name="Mantenimiento-Usuarios" extends="crudTemplate">
         <put-attribute name="title" value="Mantenimiento de Usuarios" />
         <put-attribute name="body" value="/views/mantenimiento-usuario.jsp" />
         <put-attribute name="current" value="mantenimientousuario" cascade="true"/>
         <put-list-attribute name="javascripts" inherit="true">
-            <add-attribute value="../js/libs/jqgrid/jquery.jqGrid.min.js"/>
-            <add-attribute value="../js/libs/jqgrid/grid.locale-es.js"/>
             <add-attribute value="../js/controllers/usuario.js" />
-        </put-list-attribute>
-        
-        <put-list-attribute name="stylesheets" inherit="true">
-            <add-attribute value="../css/jqgrid/ui.jqgrid.css" />
-            <add-attribute value="../css/jqgrid/ui.jqgrid-bootstarp.css" />
-        </put-list-attribute>
-        
+        </put-list-attribute> 
     </definition>
     
     
-    <definition name="Mantenimiento-Colaboradores" extends="defaultTemplate">
+    <definition name="Mantenimiento-Colaboradores" extends="crudTemplate">
         <put-attribute name="title" value="Mantenimiento de Colaborador" />
         <put-attribute name="body" value="/views/mantenimiento-colaborador.jsp" />
         <put-attribute name="current" value="mantenimientocolaborador" cascade="true"/>
         <put-list-attribute name="javascripts" inherit="true">
-            <add-attribute value="../js/libs/jqgrid/jquery.jqGrid.min.js"/>
-            <add-attribute value="../js/libs/jqgrid/grid.locale-es.js"/>
             <add-attribute value="../js/controllers/colaborador.js" />
         </put-list-attribute>
-        
-        <put-list-attribute name="stylesheets" inherit="true">
-            <add-attribute value="../css/jqgrid/ui.jqgrid.css" />
-            <add-attribute value="../css/jqgrid/ui.jqgrid-bootstarp.css" />
-        </put-list-attribute>
-        
     </definition>
 </tiles-definitions>

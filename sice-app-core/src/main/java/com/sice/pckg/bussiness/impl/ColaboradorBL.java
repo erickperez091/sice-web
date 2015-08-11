@@ -13,7 +13,6 @@ import com.sice.pckg.entidades.util.Respuesta;
 import com.sice.pckg.entidades.util.RespuestaGenerica;
 import com.sice.pckg.entidades.util.jqGridModel;
 import java.util.List;
-import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -33,22 +32,27 @@ public class ColaboradorBL implements IBussiness<Colaborador> {
         this.colaboradorDAO = colaboradorDAO;
     }
 
+    @Override
     public Respuesta guardar(Colaborador colaborador) {
         return this.getColaboradorDAO().guardar(colaborador);
     }
 
+    @Override
     public Respuesta actualizar(Colaborador colaborador) {
         return this.getColaboradorDAO().actualizar(colaborador);
     }
 
+    @Override
     public Respuesta eliminar(Colaborador colaborador) {
         return this.getColaboradorDAO().eliminar(colaborador);
     }
 
+    @Override
     public RespuestaGenerica<Colaborador> obtener(int id) {
         return this.getColaboradorDAO().obtener(id);
     }
 
+    @Override
     public RespuestaGenerica<List<Colaborador>> listar() {
         return this.getColaboradorDAO().listar();
     }
@@ -59,7 +63,7 @@ public class ColaboradorBL implements IBussiness<Colaborador> {
 
     public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual, int cantidadRegistros) {
         jqGridModel<Colaborador> model = ((ColaboradorDAO) this.getColaboradorDAO()).obtenerTodosGrid(indice, orden, paginaActual, cantidadRegistros).getRespuesta();
-        model.getRows().forEach((col)-> {col.setEventos(null);});
+        model.getRows().forEach((colaborador)-> {colaborador.setEventos(null);});
         return new RespuestaGenerica<>(model);
     }
 }

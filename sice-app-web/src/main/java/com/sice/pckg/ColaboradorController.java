@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -83,7 +84,7 @@ public class ColaboradorController {
     
     @RequestMapping(value = "/EliminarColaborador", method = RequestMethod.POST)
     public @ResponseBody
-    Respuesta eliminarColaborador(@ModelAttribute(value = "colaborador") Colaborador colaborador, HttpServletRequest request, HttpServletResponse response) {
+    Respuesta eliminarColaborador(@RequestBody Colaborador colaborador, HttpServletRequest request, HttpServletResponse response) {
         Respuesta respuesta = this.getColaboradorBL().eliminar(colaborador);
         if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

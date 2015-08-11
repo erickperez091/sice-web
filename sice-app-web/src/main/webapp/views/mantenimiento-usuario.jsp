@@ -34,8 +34,8 @@
 </div> <!-- #content -->	
 
 
-<div id="styledModal" class="modal modal-styled fade">
-    <div class="modal-dialog">
+<div id="modalUsuario" class="modal modal-styled fade">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <form:form id="formUsuario" modelAttribute="usuario">
                 <div class="modal-header">
@@ -63,8 +63,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button id="btnCancel" type="button" class="btn btn-tertiary" data-dismiss="modal">Close</button>
-                    <button id="btnAccept" type="button" class="btn btn-primary">Save changes</button>
+                    <button id="btnCancel" type="button" class="btn btn-tertiary" data-dismiss="modal">Cancelar</button>
+                    <button id="btnAccept" type="button" class="btn btn-primary">Aceptar</button>
                 </div>
             </form:form>
         </div><!-- /.modal-content -->

@@ -10,12 +10,12 @@ $(document).ready(function () {
     var btnDel = $('#btnDel');
     var btnAccept = $('#btnAccept');
     var btnCancel = $('#btnCancel');
-    var colaboradorForm = $('#styledModal');
+    var colaboradorForm = $('#modalColaborador');
+    var tituloModal = $('#modalColaborador .modal-title');
     var colaborador;
 
-
     var jqgrid = $('#jqgrid').jqGrid({
-        url: getContextPath() + '/Colaborador/ListarColaboradores',
+        url: contextPath + '/Colaborador/ListarColaboradores',
         mtype: 'POST',
         datatype: 'json',
         jsonReader: {
@@ -45,13 +45,21 @@ $(document).ready(function () {
         emptyrecords: "No hay datos disponibles"
     });
 
-
-
     btnAdd.click(function () {
         $.limpiarCampos($('#formColaborador'));
         colaboradorForm.modal('show');
+        tituloModal.text('Nuevo Colaborador');
         $('#idColaborador').val('0');
+        $('#edad').val('');
     });
+
+    $.alerta = function (mensaje) {
+        bootbox.alert({
+            size: 'small',
+            message: mensaje
+        });
+    };
+
 
     btnSearch.click(function () {
         var idRow = jqgrid.jqGrid('getGridParam', 'selrow');
@@ -76,8 +84,14 @@ $(document).ready(function () {
                 },
                 success: function (data) {
                     console.log(data);
-                    
+                    $('#idColaborador').val(data.respuesta.idColaborador);
+                    $('#identificacion').val(data.respuesta.identificacion);
+                    $('#nombre').val(data.respuesta.nombre);
+                    $('#direccion').val(data.respuesta.direccion);
+                    $('#telefono').val(data.respuesta.telefono);
+                    $('#edad').val(data.respuesta.edad);
                     $.unblockUI();
+                    tituloModal.text('Editar Colaborador');
                     colaboradorForm.modal('show');
                 },
                 error: function () {
@@ -94,7 +108,7 @@ $(document).ready(function () {
             });
         }
     });
-    
+
     btnAccept.click(function () {
         $.ajax({
             url: contextPath + '/Colaborador/AgregarColaborador',
@@ -111,15 +125,16 @@ $(document).ready(function () {
                 if (!data.errorActual) {
                     jqgrid.trigger("reloadGrid");
                     colaboradorForm.modal('hide');
+                    $.alerta('Registrado creado exitosamente');
                 }
                 else {
-                    alert('Ocurrio un error agregando el registro');
+                    $.alerta('Ocurrio un error agregando el registro');
                 }
                 $.unblockUI();
             },
             error: function (error) {
                 $.unblockUI();
-                alert(error);
+                $.alerta('Ocurrio un error en la creacion del registro');
             }
         });
     });
@@ -127,7 +142,9 @@ $(document).ready(function () {
     btnCancel.click(function () {
         colaboradorForm.modal('hide');
     });
-    
+
+
+
     btnDel.click(function () {
         var idRow = jqgrid.jqGrid('getGridParam', 'selrow');
         if (!idRow) {
@@ -141,13 +158,14 @@ $(document).ready(function () {
             });
         } else {
             colaborador = jqgrid.jqGrid('getRowData', idRow, 'idColaborador');
-            $('#idColaborador').val(colaborador.idColaborador);
-            $('#identificacion').val(colaborador.identificacion);
-            $('#nombre').val(colaborador.nombre);
-            $('#direccion').val(colaborador.direccion);
-            $('#telefono').val(colaborador.telefono);
-            $('#edad').val(colaborador.edad);
-            //$("#dialog-confirm").dialog('open');
+            var mensajes = {
+                pregunta: 'Seguro que desea eliminar el colaborador seleccionado?',
+                exitoso: 'Eliminado exitosamente',
+                fallido: 'Ocurrio un error al eliminar el colaborador'
+            };
+            $.confirmDelete(colaborador, contextPath + '/Colaborador/EliminarColaborador', jqgrid, mensajes);
+            //$.confirm(c);
+
         }
     });
 

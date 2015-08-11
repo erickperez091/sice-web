@@ -11,7 +11,8 @@ $(document).ready(function () {
     var btnDel = $('#btnDel');
     var btnAccept = $('#btnAccept');
     var btnCancel = $('#btnCancel');
-    var usuarioForm = $('#styledModal');
+    var usuarioForm = $('#modalUsuario');
+    var tituloModal = $('#modalColaborador .modal-title');
     var usuario;
 
     var jqgrid = $('#jqgrid').jqGrid({
@@ -41,13 +42,18 @@ $(document).ready(function () {
         pgbuttons: true,
         emptyrecords: "No hay datos disponibles"
     });
-
-
+    
+    $.alerta = function(mensaje){
+        bootbox.alert({
+            size: 'small',
+            message: mensaje
+        });
+    };
     
     btnAdd.click(function () {
         $.limpiarCampos($('#formUsuario'));
         usuarioForm.modal('show');
-        //$('#styledModal').popup('open');
+        tituloModal.text('Nuevo Usuario');
         $('#idUsuario').val('0');
     });
 
@@ -78,6 +84,7 @@ $(document).ready(function () {
                     $('#usuario').val(data.respuesta.usuario);
                     $('#contrasenna').val(data.respuesta.contrasenna);
                     $.unblockUI();
+                    tituloModal.text('Editar Usuario');
                     usuarioForm.modal('show');
                 },
                 error: function () {
@@ -108,7 +115,12 @@ $(document).ready(function () {
             });
         } else {
             usuario = jqgrid.jqGrid('getRowData', idRow, 'idUsuario');
-            $("#dialog-confirm").dialog('open');
+            var mensajes = {
+                pregunta: 'Seguro que desea eliminar el colaborador seleccionado?',
+                exitoso: 'Eliminado exitosamente',
+                fallido: 'Ocurrio un error al eliminar el colaborador'
+            };
+            $.confirmDelete(usuario, contextPath + '/Usuario/EliminarUsuario', jqgrid, mensajes);
         }
     });
 
@@ -128,6 +140,7 @@ $(document).ready(function () {
                 if (!data.errorActual) {
                     jqgrid.trigger("reloadGrid");
                     usuarioForm.modal('hide');
+                    $.alerta('Registro creado exitosamente');
                 }
                 else {
                     alert('Ocurrio un error agregando el registro');
@@ -136,7 +149,7 @@ $(document).ready(function () {
             },
             error: function (error) {
                 $.unblockUI();
-                alert(error);
+                $.alerta('Ocurrio un error agregando el registro');
             }
         });
     });

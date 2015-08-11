@@ -13,7 +13,7 @@
     <http pattern="/Home/BadCredentials" security="none"/>
     <http auto-config="true">
         <session-management invalid-session-url="/Home/Login">
-            <concurrency-control max-sessions="1" expired-url="/Home/Login" />
+            <concurrency-control max-sessions="1" expired-url="/Home/Login?expiredSession=true" />
         </session-management>
         <access-denied-handler error-page="/Home/Forbidden" />
         <intercept-url pattern="/Usuario/*" access="ROLE_ADMIN" />
