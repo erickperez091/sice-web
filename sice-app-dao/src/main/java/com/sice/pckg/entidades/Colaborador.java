@@ -23,12 +23,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import org.apache.commons.collections.functors.InstantiateFactory;
 import org.apache.commons.collections.list.LazyList;
+
 /**
  *
  * @author erick
  */
 @Entity
-@Table(name = "COLABORADOR", indexes = {@Index(unique = true, name = "IX_COLABORADOR", columnList = "ID_COLABORADOR")})
+@Table(name = "COLABORADOR", indexes = {
+    @Index(unique = true, name = "IX_COLABORADOR", columnList = "ID_COLABORADOR")})
 public class Colaborador implements java.io.Serializable {
 
     @Id
@@ -46,11 +48,14 @@ public class Colaborador implements java.io.Serializable {
     @Column(name = "EDAD")
     private int edad;
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "COLABORADOR_EVENTO", 
-            joinColumns = {@JoinColumn(name = "ID_COLABORADOR", referencedColumnName = "ID_COLABORADOR", unique = true, nullable = false, updatable = true)
-            }, 
-            inverseJoinColumns = {@JoinColumn(name = "ID_EVENTO", referencedColumnName = "ID_EVENTO", unique = true, nullable = false, updatable = true)},
-            uniqueConstraints = {@UniqueConstraint(name = "CTX_COLABORADOREVENTO", columnNames = {"ID_COLABORADOR","ID_EVENTO"})}, 
+    @JoinTable(name = "COLABORADOR_EVENTO",
+            joinColumns = {
+                @JoinColumn(name = "ID_COLABORADOR", referencedColumnName = "ID_COLABORADOR", unique = true, nullable = false, updatable = true)
+            },
+            inverseJoinColumns = {
+                @JoinColumn(name = "ID_EVENTO", referencedColumnName = "ID_EVENTO", unique = true, nullable = false, updatable = true)},
+            uniqueConstraints = {
+                @UniqueConstraint(name = "CTX_COLABORADOREVENTO", columnNames = {"ID_COLABORADOR", "ID_EVENTO"})},
             foreignKey = @ForeignKey(name = "ID_COLABORADOR", value = ConstraintMode.CONSTRAINT),
             inverseForeignKey = @ForeignKey(name = "ID_EVENTO", value = ConstraintMode.CONSTRAINT)
     )
@@ -71,7 +76,7 @@ public class Colaborador implements java.io.Serializable {
         this.edad = edad;
         this.eventos = eventos;
     }
-    
+
     public int getIdColaborador() {
         return idColaborador;
     }
