@@ -31,7 +31,12 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-                
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Dependencias SPRING FRAMEWORK -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -54,9 +59,9 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-                
+
         <!-- Fin Dependencias SPRING FRAMEWORK -->
-                
+
         <!--SPRING SECURITY -->
 
         <dependency>
@@ -76,7 +81,7 @@
             <artifactId>spring-security-config</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
@@ -84,7 +89,7 @@
         </dependency>
 
         <!-- FIN SPRING SECURITY -->
-                
+
         <!-- Dependencias Servlet y JSTL -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -95,11 +100,10 @@
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
-            <type>jar</type>
-            <scope>provided</scope>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
         </dependency>
+
         <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
@@ -107,9 +111,9 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-                
+
         <!-- Fin Dependencias Servlet y JSTL -->
-                
+
         <!-- Dependencias LOGS -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -132,11 +136,11 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-                
+
         <!-- Fin Dependencias LOGS -->
-                
+
         <!-- Dependencias DRIVERS DB -->
-                
+
         <dependency>
             <groupId>ojdbc</groupId>
             <artifactId>ojdbc</artifactId>
@@ -158,9 +162,9 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
-                
+
         <!-- Fin Dependencias DRIVERS DB -->
-                
+
         <!-- Dependencias JSON (JACKSON) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -174,15 +178,15 @@
         </dependency>
 
         <!-- Fin Dependencias JSON (JACKSON) -->
-        
+
         <!-- Dependencias APACHE TILES -->
-        
+
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-extras</artifactId>
             <version>${tiles.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-core</artifactId>
@@ -202,7 +206,7 @@
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-template</artifactId>
             <version>${tiles.version}</version>
-        </dependency>	
+        </dependency>
         <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-el</artifactId>
@@ -220,7 +224,7 @@
         </dependency>
     </dependencies>
     <build>
-        <plugins>
+        <plugins>                
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

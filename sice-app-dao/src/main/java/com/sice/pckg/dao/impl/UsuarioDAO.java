@@ -51,7 +51,8 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
     public Respuesta guardar(Usuario usuario) {
         Respuesta respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
+            tx = session.beginTransaction();
             User user = new User(usuario.getUsuario(), usuario.getContrasenna(), true, true, true, true, new ArrayList());
             Object salt = saltSource.getSalt(user);
             usuario.setContrasenna(passwordEncoder.encodePassword(usuario.getContrasenna(), salt));
@@ -77,8 +78,9 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
     public Respuesta actualizar(Usuario usuario) {
         Respuesta respuesta;
         try {
-            this.iniciaOperacion();
-            this.session.update(usuario);
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
+            tx = session.beginTransaction();
+            this.session.saveOrUpdate(usuario);
             tx.commit();
             respuesta = new RespuestaGenerica(usuario);
         } catch (Exception ex) {
@@ -100,7 +102,8 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
     public Respuesta eliminar(Usuario usuario) {
         Respuesta respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
+            tx = session.beginTransaction();
             this.session.delete(usuario);
             tx.commit();
             respuesta = new RespuestaGenerica(usuario);
@@ -124,7 +127,7 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
         Usuario usuario;
         RespuestaGenerica<Usuario> respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
             Criteria criteria = session.createCriteria(Usuario.class).add(Restrictions.eq("idUsuario", id));
             usuario = (Usuario) criteria.uniqueResult();
             respuesta = new RespuestaGenerica(usuario);
@@ -148,7 +151,7 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
         List<Usuario> lista = null;
         RespuestaGenerica<List<Usuario>> respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
             Query consulta = session.createQuery("FROM Usuario u");
             lista = consulta.list();
             respuesta = new RespuestaGenerica(lista);
@@ -187,7 +190,7 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
             String orden, int paginaActual, int cantidadRegistros) {
         RespuestaGenerica<jqGridModel<Usuario>> respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
             jqGridModel<Usuario> model = new jqGridModel();
             model.setPage(paginaActual);
             model.setRecords(this.cantidadRegistros().getRespuesta());
@@ -234,12 +237,11 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
 
     private void iniciaOperacion() throws HibernateException {
         try {
-            session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        } catch (Exception ex) {
             session = this.getHibernateTemplate().getSessionFactory().openSession();
-        } finally {
-            tx = session.beginTransaction();
+        } catch (Exception ex) {
+            //session = this.getHibernateTemplate().getSessionFactory().openSession();
         }
+        tx = session.beginTransaction();
     }
 
     public MessageDigestPasswordEncoder getPasswordEncoder() {

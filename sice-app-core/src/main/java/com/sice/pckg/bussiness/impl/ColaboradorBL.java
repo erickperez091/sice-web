@@ -49,7 +49,14 @@ public class ColaboradorBL implements IBussiness<Colaborador> {
 
     @Override
     public RespuestaGenerica<Colaborador> obtener(int id) {
-        return this.getColaboradorDAO().obtener(id);
+        RespuestaGenerica<Colaborador> respuesta = this.getColaboradorDAO().obtener(id);
+        if(respuesta.getRespuesta().getEventos().size() > 0){
+            respuesta.getRespuesta().getEventos().forEach((evento)-> {evento.setColaboradores(null);});
+        }
+        else{
+            respuesta.getRespuesta().setEventos(null);
+        }
+        return respuesta;
     }
 
     @Override

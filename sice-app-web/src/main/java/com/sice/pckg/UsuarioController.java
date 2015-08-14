@@ -50,7 +50,7 @@ public class UsuarioController {
     public ModelAndView mantenimientoUsuarios(HttpServletRequest request, HttpServletResponse response, Principal principal) {
         Map<String, Object> model = new HashMap<>();
         model.put("usuario", new Usuario());
-        model.put("username", principal.getName());
+        model.put("username", principal != null ? principal.getName() : "");
         return new ModelAndView("Mantenimiento-Usuarios", model);
     }
 

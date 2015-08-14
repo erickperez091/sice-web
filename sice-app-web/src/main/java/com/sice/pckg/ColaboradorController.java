@@ -50,7 +50,7 @@ public class ColaboradorController {
     public ModelAndView mantenimientoColaboradores(HttpServletRequest request, HttpServletResponse response, Principal principal) {
         Map<String, Object> model = new HashMap<>();
         model.put("colaborador", new Colaborador());
-        model.put("username", principal.getName());
+        model.put("username", principal != null ? principal.getName() : "");
         return new ModelAndView("Mantenimiento-Colaboradores", model);
     }
 
@@ -96,6 +96,7 @@ public class ColaboradorController {
     public @ResponseBody
     RespuestaGenerica<Colaborador> obtenerColaborador(int identificacion, HttpServletRequest request, HttpServletResponse response) {
         RespuestaGenerica<Colaborador> respuesta = this.getColaboradorBL().obtener(identificacion);
+        
         if (respuesta.getEstado() == UtilEnum.EstadoRespuesta.FALLIDA) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

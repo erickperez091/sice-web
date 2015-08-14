@@ -22,7 +22,9 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  *
@@ -39,7 +41,8 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
     public Respuesta guardar(Colaborador colaborador) {
         Respuesta respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
+            tx = session.beginTransaction();
             this.session.save(colaborador);
             tx.commit();
             respuesta = new RespuestaGenerica(colaborador);
@@ -50,6 +53,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             respuesta = new Respuesta(ex);
         } finally {
             try {
+                tx = null;
                 session.close();
             } catch (Exception ex) {
                 Logger.getLogger(ColaboradorDAO.class.getName()).log(
@@ -64,15 +68,9 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
     public Respuesta actualizar(Colaborador colaborador) {
         Respuesta respuesta;
         try {
-            if (session != null) {
-                if (session.isOpen()) {
-                    session.disconnect();
-                    session.close();
-                    session = null;
-                }
-            }
-            this.iniciaOperacion();
-            this.session.update(colaborador);
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
+            tx = session.beginTransaction();
+            this.session.saveOrUpdate(colaborador);
             tx.commit();
             respuesta = new RespuestaGenerica(colaborador);
         } catch (Exception ex) {
@@ -82,6 +80,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             respuesta = new Respuesta(ex);
         } finally {
             try {
+                tx = null;
                 session.close();
             } catch (Exception ex) {
                 Logger.getLogger(ColaboradorDAO.class.getName()).log(
@@ -96,7 +95,8 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
     public Respuesta eliminar(Colaborador colaborador) {
         Respuesta respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
+            tx = session.beginTransaction();
             this.session.delete(colaborador);
             tx.commit();
             respuesta = new RespuestaGenerica(colaborador);
@@ -122,18 +122,19 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
         Colaborador colaborador;
         RespuestaGenerica<Colaborador> respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
             Criteria criteria = session.createCriteria(Colaborador.class).add(
                     Restrictions.eq("idColaborador", id));
             colaborador = (Colaborador) criteria.uniqueResult();
+            this.getHibernateTemplate().initialize(colaborador.getEventos());
             respuesta = new RespuestaGenerica<>(colaborador);
-        } catch (Exception ex) {
+        } catch (HibernateException | DataAccessException ex) {
             Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
                     null, ex);
             respuesta = new RespuestaGenerica(ex);
         } finally {
             try {
-                // session.close();
+                session.close();
             } catch (Exception ex) {
                 Logger.getLogger(ColaboradorDAO.class.getName()).log(
                         Level.SEVERE, null, ex);
@@ -149,7 +150,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
         @SuppressWarnings("UnusedAssignment")
         List<Colaborador> lista = null;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
             Query consulta = session.createQuery("FROM Colaborador c");
             lista = consulta.list();
             respuesta = new RespuestaGenerica<>(lista);
@@ -189,7 +190,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
     public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual, int cantidadRegistros) {
         RespuestaGenerica<jqGridModel> respuesta;
         try {
-            this.iniciaOperacion();
+            session = this.getHibernateTemplate().getSessionFactory().openSession();
             jqGridModel<Colaborador> model = new jqGridModel<>();
             model.setPage(paginaActual);
             model.setRecords(this.cantidadRegistros().getRespuesta());

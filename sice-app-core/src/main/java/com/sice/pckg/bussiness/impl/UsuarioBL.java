@@ -61,6 +61,7 @@ public class UsuarioBL implements IBussiness<Usuario>{
     }
     
     public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual, int cantidadRegistros) {
+        System.out.println(this.usuarioDAO.getClass());
         jqGridModel<Usuario> model = ((UsuarioDAO) this.getUsuarioDAO()).obtenerTodosGrid(indice, orden, paginaActual, cantidadRegistros).getRespuesta();
         model.getRows().forEach((user)-> {user.setContrasenna("");});
         return new RespuestaGenerica<>(model);
