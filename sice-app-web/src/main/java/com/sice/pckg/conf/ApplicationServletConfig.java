@@ -7,17 +7,24 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
+import org.springframework.security.authentication.dao.ReflectionSaltSource;
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
@@ -34,14 +41,12 @@ import com.sice.pckg.dao.impl.ColaboradorDAO;
 import com.sice.pckg.dao.impl.EventoDAO;
 import com.sice.pckg.dao.impl.IntentosLoginDAO;
 import com.sice.pckg.dao.impl.UsuarioDAO;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
 @Configuration
 @ComponentScan("com.sice.pckg")
-@EnableTransactionManagement(proxyTargetClass = true)
+@EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.PROXY)
 @EnableWebMvc
+@Import({SecurityConfig.class})
 public class ApplicationServletConfig extends WebMvcConfigurerAdapter {
 
     @Override
@@ -102,19 +107,15 @@ public class ApplicationServletConfig extends WebMvcConfigurerAdapter {
         return dataSource;
     }
 
-    @Autowired
-    @Bean(name = "sessionFactory")
-    public SessionFactory getSessionFactory(DataSource dataSource) {
-        LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
-        sessionBuilder.addProperties(this.hibernateProperties());
-        //sessionBuilder.addPackage("com.sice.pckg.entidades");
+    
+    @Bean(name = "sessionFactory", autowire = Autowire.BY_NAME)
+    public SessionFactory sessionFactory() {
+        LocalSessionFactoryBuilder builder
+                = new LocalSessionFactoryBuilder(dataSource());
+        builder.scanPackages("com.sice.pckg.entidades")
+                .addProperties(hibernateProperties());
 
-        sessionBuilder.addAnnotatedClass(com.sice.pckg.entidades.Colaborador.class);
-        sessionBuilder.addAnnotatedClass(com.sice.pckg.entidades.Evento.class);
-        sessionBuilder.addAnnotatedClass(com.sice.pckg.entidades.Usuario.class);
-        sessionBuilder.addAnnotatedClass(com.sice.pckg.entidades.IntentosLogin.class);
-
-        return sessionBuilder.buildSessionFactory();
+        return builder.buildSessionFactory();
     }
 
     @Autowired
@@ -133,18 +134,32 @@ public class ApplicationServletConfig extends WebMvcConfigurerAdapter {
         return props;
     }
 
+    @Autowired
+    @Bean(name = "passwordEncoder")
+    public MessageDigestPasswordEncoder passwordEncoder() {
+        return new MessageDigestPasswordEncoder("MD5");
+    }
+
+    @Autowired
+    @Bean(name = "saltSource")
+    public ReflectionSaltSource saltSource() {
+        ReflectionSaltSource salt = new ReflectionSaltSource();
+        salt.setUserPropertyToUse("username");
+        return salt;
+    }
+
     @Bean(autowire = Autowire.BY_NAME, name = "colaboradorDAO")
-    public IDAO getColaboradoDAO() {
+    public IDAO<?> getColaboradoDAO() {
         return new ColaboradorDAO();
     }
 
     @Bean(autowire = Autowire.BY_NAME, name = "usuarioDAO")
-    public IDAO getUsuarioDAO() {
+    public IDAO<?> getUsuarioDAO() {
         return new UsuarioDAO();
     }
 
     @Bean(autowire = Autowire.BY_NAME, name = "eventoDAO")
-    public IDAO getEventoDAO() {
+    public IDAO<?> getEventoDAO() {
         return new EventoDAO();
     }
 
@@ -154,17 +169,17 @@ public class ApplicationServletConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean(autowire = Autowire.BY_NAME, name = "usuarioBL")
-    public IBussiness getUsuarioBL() {
+    public IBussiness<?> getUsuarioBL() {
         return new UsuarioBL();
     }
 
     @Bean(autowire = Autowire.BY_NAME, name = "colaboradorBL")
-    public IBussiness getColaboradorBL() {
+    public IBussiness<?> getColaboradorBL() {
         return new ColaboradorBL();
     }
 
     @Bean(autowire = Autowire.BY_NAME, name = "eventoBL")
-    public IBussiness getEventoBL() {
+    public IBussiness<?> getEventoBL() {
         return new EventoBL();
     }
 

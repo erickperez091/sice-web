@@ -30,8 +30,7 @@ import org.springframework.transaction.annotation.Propagation;
  *
  * @author erick
  */
-public class ColaboradorDAO extends HibernateDaoSupport implements
-        IDAO<Colaborador> {
+public class ColaboradorDAO extends HibernateDaoSupport implements IDAO<Colaborador> {
 
     private Session session;
     private Transaction tx;
@@ -47,8 +46,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             tx.commit();
             respuesta = new RespuestaGenerica(colaborador);
         } catch (Exception ex) {
-            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
-                    null, ex);
+            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             tx.rollback();
             respuesta = new Respuesta(ex);
         } finally {
@@ -56,8 +54,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
                 tx = null;
                 session.close();
             } catch (Exception ex) {
-                Logger.getLogger(ColaboradorDAO.class.getName()).log(
-                        Level.SEVERE, null, ex);
+                Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return respuesta;
@@ -74,8 +71,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             tx.commit();
             respuesta = new RespuestaGenerica(colaborador);
         } catch (Exception ex) {
-            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
-                    null, ex);
+            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             tx.rollback();
             respuesta = new Respuesta(ex);
         } finally {
@@ -83,8 +79,7 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
                 tx = null;
                 session.close();
             } catch (Exception ex) {
-                Logger.getLogger(ColaboradorDAO.class.getName()).log(
-                        Level.SEVERE, null, ex);
+                Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return respuesta;
@@ -101,16 +96,14 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             tx.commit();
             respuesta = new RespuestaGenerica(colaborador);
         } catch (Exception ex) {
-            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
-                    null, ex);
+            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             tx.rollback();
             respuesta = new Respuesta(ex);
         } finally {
             try {
                 session.close();
             } catch (Exception ex) {
-                Logger.getLogger(ColaboradorDAO.class.getName()).log(
-                        Level.SEVERE, null, ex);
+                Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return respuesta;
@@ -123,21 +116,18 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
         RespuestaGenerica<Colaborador> respuesta;
         try {
             session = this.getHibernateTemplate().getSessionFactory().openSession();
-            Criteria criteria = session.createCriteria(Colaborador.class).add(
-                    Restrictions.eq("idColaborador", id));
+            Criteria criteria = session.createCriteria(Colaborador.class).add(Restrictions.eq("idColaborador", id));
             colaborador = (Colaborador) criteria.uniqueResult();
             this.getHibernateTemplate().initialize(colaborador.getEventos());
             respuesta = new RespuestaGenerica<>(colaborador);
         } catch (HibernateException | DataAccessException ex) {
-            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
-                    null, ex);
+            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = new RespuestaGenerica(ex);
         } finally {
             try {
                 session.close();
             } catch (Exception ex) {
-                Logger.getLogger(ColaboradorDAO.class.getName()).log(
-                        Level.SEVERE, null, ex);
+                Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return respuesta;
@@ -155,15 +145,13 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
             lista = consulta.list();
             respuesta = new RespuestaGenerica<>(lista);
         } catch (Exception ex) {
-            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE,
-                    null, ex);
+            Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = new RespuestaGenerica<>(ex);
         } finally {
             try {
                 // session.close();
             } catch (Exception ex) {
-                Logger.getLogger(ColaboradorDAO.class.getName()).log(
-                        Level.SEVERE, null, ex);
+                Logger.getLogger(ColaboradorDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return respuesta;
@@ -187,7 +175,8 @@ public class ColaboradorDAO extends HibernateDaoSupport implements
     }
 
     @Transactional(readOnly = true)
-    public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual, int cantidadRegistros) {
+    public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual,
+            int cantidadRegistros) {
         RespuestaGenerica<jqGridModel> respuesta;
         try {
             session = this.getHibernateTemplate().getSessionFactory().openSession();

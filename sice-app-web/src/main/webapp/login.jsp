@@ -58,7 +58,7 @@
                         ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
                     </div>
                 </c:if>
-                <form name="login" id="login-form" action="<c:url value='../j_spring_security_check' />" class="form" method="POST">
+                <form name="login" id="login-form" action="<c:url value='/login' />" class="form" method="POST">
                     <div class="form-group">
                         <label for="login-username">Usuario</label>
                         <input type="text" class="form-control" name="j_username" id="login-username" placeholder="Usuario">

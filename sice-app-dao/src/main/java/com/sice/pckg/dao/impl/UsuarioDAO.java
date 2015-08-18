@@ -25,7 +25,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,16 +33,19 @@ import com.sice.pckg.entidades.Usuario;
 import com.sice.pckg.entidades.util.Respuesta;
 import com.sice.pckg.entidades.util.RespuestaGenerica;
 import com.sice.pckg.entidades.util.jqGridModel;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author ERICK
  */
-public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, UserDetailsService {
+public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario> {
 
     private Session session;
     private Transaction tx;
+    @Autowired(required = true)
     private SaltSource saltSource;
+    @Autowired(required = true)
     private MessageDigestPasswordEncoder passwordEncoder;
 
     @Transactional
@@ -218,7 +220,6 @@ public class UsuarioDAO extends HibernateDaoSupport implements IDAO<Usuario>, Us
         return respuesta;
     }
 
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         @SuppressWarnings("UnusedAssignment")
         Usuario usuario = null;

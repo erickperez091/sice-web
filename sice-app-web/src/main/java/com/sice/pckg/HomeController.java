@@ -63,7 +63,7 @@ public class HomeController {
 
     @RequestMapping(value = "/Logout", method = RequestMethod.GET)
     public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("Login?Logout=true");
+        return new ModelAndView("Login?logout=true");
     }
 
     @RequestMapping(value = "/Forbidden", method = RequestMethod.GET)

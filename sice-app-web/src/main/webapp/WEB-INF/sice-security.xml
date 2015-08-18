@@ -28,6 +28,7 @@
         <authentication-provider user-service-ref="usuarioDAO">
             <password-encoder ref="passwordEncoder">
                 <salt-source ref="saltSource" />
+                
             </password-encoder>
         </authentication-provider>
     </authentication-manager>-->

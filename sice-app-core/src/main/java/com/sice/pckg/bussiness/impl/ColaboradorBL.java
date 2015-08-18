@@ -21,56 +21,63 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ColaboradorBL implements IBussiness<Colaborador> {
 
-    @Autowired
-    IDAO colaboradorDAO;
+  @Autowired
+  IDAO<Colaborador> colaboradorDAO;
 
-    public IDAO getColaboradorDAO() {
-        return colaboradorDAO;
-    }
+  public IDAO<Colaborador> getColaboradorDAO() {
+    return colaboradorDAO;
+  }
 
-    public void setColaboradorDAO(IDAO colaboradorDAO) {
-        this.colaboradorDAO = colaboradorDAO;
-    }
+  public void setColaboradorDAO(IDAO<Colaborador> colaboradorDAO) {
+    this.colaboradorDAO = colaboradorDAO;
+  }
 
-    @Override
-    public Respuesta guardar(Colaborador colaborador) {
-        return this.getColaboradorDAO().guardar(colaborador);
-    }
+  @Override
+  public Respuesta guardar(Colaborador colaborador) {
+    return this.getColaboradorDAO().guardar(colaborador);
+  }
 
-    @Override
-    public Respuesta actualizar(Colaborador colaborador) {
-        return this.getColaboradorDAO().actualizar(colaborador);
-    }
+  @Override
+  public Respuesta actualizar(Colaborador colaborador) {
+    return this.getColaboradorDAO().actualizar(colaborador);
+  }
 
-    @Override
-    public Respuesta eliminar(Colaborador colaborador) {
-        return this.getColaboradorDAO().eliminar(colaborador);
-    }
+  @Override
+  public Respuesta eliminar(Colaborador colaborador) {
+    return this.getColaboradorDAO().eliminar(colaborador);
+  }
 
-    @Override
-    public RespuestaGenerica<Colaborador> obtener(int id) {
-        RespuestaGenerica<Colaborador> respuesta = this.getColaboradorDAO().obtener(id);
-        if(respuesta.getRespuesta().getEventos().size() > 0){
-            respuesta.getRespuesta().getEventos().forEach((evento)-> {evento.setColaboradores(null);});
-        }
-        else{
-            respuesta.getRespuesta().setEventos(null);
-        }
-        return respuesta;
+  @Override
+  public RespuestaGenerica<Colaborador> obtener(int id) {
+    RespuestaGenerica<Colaborador> respuesta = this.getColaboradorDAO().obtener(id);
+    Colaborador col = respuesta.getRespuesta();
+    if (col.getEventos().size() > 0) {
+      col.getEventos().forEach((evento) -> {
+        evento.setColaboradores(null);
+      });
+    } else {
+      col.setEventos(null);
     }
+    respuesta.setRespuesta(col);
+    return respuesta;
+  }
 
-    @Override
-    public RespuestaGenerica<List<Colaborador>> listar() {
-        return this.getColaboradorDAO().listar();
-    }
+  @Override
+  public RespuestaGenerica<List<Colaborador>> listar() {
+    return this.getColaboradorDAO().listar();
+  }
 
-    public RespuestaGenerica<Integer> cantidadRegistros() {
-        return this.getColaboradorDAO().cantidadRegistros();
-    }
+  @SuppressWarnings("unchecked")
+  public RespuestaGenerica<Integer> cantidadRegistros() {
+    return this.getColaboradorDAO().cantidadRegistros();
+  }
 
-    public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual, int cantidadRegistros) {
-        jqGridModel<Colaborador> model = ((ColaboradorDAO) this.getColaboradorDAO()).obtenerTodosGrid(indice, orden, paginaActual, cantidadRegistros).getRespuesta();
-        model.getRows().forEach((colaborador)-> {colaborador.setEventos(null);});
-        return new RespuestaGenerica<>(model);
-    }
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public RespuestaGenerica<jqGridModel> obtenerTodosGrid(String indice, String orden, int paginaActual, int cantidadRegistros) {
+    jqGridModel<Colaborador> model = ((ColaboradorDAO) this.getColaboradorDAO()).obtenerTodosGrid(indice, orden, paginaActual, cantidadRegistros).getRespuesta();
+    model.getRows().forEach((colaborador) -> {
+      colaborador.setEventos(null);
+    });
+    return new RespuestaGenerica<>(model);
+  }
 }
