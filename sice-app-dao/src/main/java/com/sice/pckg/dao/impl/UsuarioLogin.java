@@ -30,9 +30,7 @@ public class UsuarioLogin {
         try {
             Criteria criteria = sessionFactory.openSession().createCriteria(Usuario.class).add(Restrictions.eq("usuario", username));
             usuario = (Usuario) criteria.uniqueResult();
-            //Falta obtener/crear los roles para los diferentes usuarios
             return usuario;
-
         } catch (Exception ex) {
             throw ex;
         }
