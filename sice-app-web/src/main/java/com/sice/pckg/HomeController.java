@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +56,7 @@ public class HomeController {
         try {
             this.getIntentosBL().actualizarIntentosFallidos(username);
             return new ModelAndView("redirect:/Home/Login?error=userCredentials");
-        } catch (Exception ex) {
+        } catch (LockedException ex) {
             session.setAttribute("SPRING_SECURITY_LAST_EXCEPTION", ex);
             return new ModelAndView("redirect:/Home/Login?error=userLocked");
         }
